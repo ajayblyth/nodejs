@@ -1,0 +1,193 @@
+============================================================
+HTML BASICS – FOUNDATION FOR JAVASCRIPT INTERACTIONS
+============================================================
+
+1. HTML DOCUMENT STRUCTURE
+------------------------------------------------------------
+<!DOCTYPE html>          → Defines document type as HTML5
+<html>                   → Root element
+<head>                   → Metadata: title, links, scripts, etc.
+  <title>Page Title</title> → Title shown in browser tab
+</head>
+<body>                   → Visible content of the page
+  <!-- Your content here -->
+</body>
+</html>
+
+Goal: JS usually manipulates elements inside <body>.
+
+------------------------------------------------------------
+2. HEADINGS & PARAGRAPHS
+------------------------------------------------------------
+<h1> to <h6> → Headings, h1 = biggest, h6 = smallest
+<p>         → Paragraph
+
+Example:
+<h1>My Page</h1>
+<p>Welcome to my webpage!</p>
+
+Goal: JS can change text, e.g., document.getElementById('id').innerText
+
+------------------------------------------------------------
+3. LINKS & IMAGES
+------------------------------------------------------------
+<a href="https://example.com">Link Text</a>   → Hyperlink
+<img src="image.jpg" alt="Description">       → Image
+
+Goal: JS can change href/src dynamically
+Example: document.querySelector('a').href = 'https://google.com';
+
+------------------------------------------------------------
+4. LISTS
+------------------------------------------------------------
+Unordered list: <ul> with <li>
+Ordered list: <ol> with <li>
+
+Example:
+<ul>
+  <li>Apple</li>
+  <li>Banana</li>
+</ul>
+
+Goal: JS can add/remove list items dynamically
+
+------------------------------------------------------------
+5. DIV & SPAN
+------------------------------------------------------------
+<div> → Block container (group elements)
+<span> → Inline container (small content)
+
+Example:
+<div id="container">
+  <span>Hello</span>
+</div>
+
+Goal: JS selects containers to modify content/style
+
+------------------------------------------------------------
+6. FORMS & INPUT ELEMENTS
+------------------------------------------------------------
+<form> → Form container
+<input type="text">        → Text input
+<input type="button" value="Click Me"> → Button
+<input type="checkbox">    → Checkbox
+<input type="radio">       → Radio button
+<textarea></textarea>      → Multi-line input
+
+Goal: JS reads/writes values with .value and handles events
+Example:
+let name = document.getElementById('nameInput').value;
+
+------------------------------------------------------------
+7. BUTTONS
+------------------------------------------------------------
+<button id="myBtn">Click Me</button>
+
+Goal: JS detects clicks and performs actions
+Example:
+document.getElementById('myBtn').addEventListener('click', function(){
+  alert('Button clicked!');
+});
+
+------------------------------------------------------------
+8. SCRIPT TAGS (LINKING JS)
+------------------------------------------------------------
+Inline JS:
+<script>
+  alert('Hello World');
+</script>
+
+External JS:
+<script src="app.js"></script>
+
+Goal: Use JS to manipulate HTML elements
+
+------------------------------------------------------------
+9. HTML ATTRIBUTES IMPORTANT FOR JS
+------------------------------------------------------------
+id      → Unique identifier (getElementById)
+class   → Group elements (querySelector/querySelectorAll)
+name    → Forms
+value   → Input value
+src     → Image source
+href    → Link destination
+
+Example:
+<input type="text" id="username" value="Ajay">
+JS: document.getElementById('username').value → "Ajay"
+
+------------------------------------------------------------
+10. COMMENTS
+------------------------------------------------------------
+<!-- This is an HTML comment -->
+
+Goal: JS can create/change comments; mainly for readability
+
+------------------------------------------------------------
+11. EXAMPLE – COMBINING ALL TAGS
+------------------------------------------------------------
+<!DOCTYPE html>
+<html>
+<head>
+  <title>JS Interaction Example</title>
+</head>
+<body>
+
+<h1 id="mainHeading">Welcome!</h1>
+<p id="intro">This is a sample page.</p>
+
+<a href="https://example.com" id="link">Go to Example</a>
+<img src="logo.png" alt="Logo" id="logo">
+
+<ul id="fruitsList">
+  <li>Apple</li>
+  <li>Banana</li>
+</ul>
+
+<div id="container">
+  <span>Inline text</span>
+</div>
+
+<form id="userForm">
+  <input type="text" id="nameInput" value="Ajay">
+  <input type="button" id="submitBtn" value="Submit">
+</form>
+
+<script>
+  // Change heading text
+  document.getElementById('mainHeading').innerText = "Hello, JS!";
+
+  // Read input value
+  let username = document.getElementById('nameInput').value;
+  console.log("User:", username);
+
+  // Add new list item dynamically
+  let ul = document.getElementById('fruitsList');
+  let li = document.createElement('li');
+  li.innerText = 'Mango';
+  ul.appendChild(li);
+
+  // Handle button click
+  document.getElementById('submitBtn').addEventListener('click', function(){
+    alert('Submitted: ' + document.getElementById('nameInput').value);
+  });
+
+  // Change link dynamically
+  document.getElementById('link').href = 'https://google.com';
+  document.getElementById('link').innerText = 'Go to Google';
+</script>
+
+</body>
+</html>
+
+------------------------------------------------------------
+SUMMARY – WHAT YOU NEED FOR JAVASCRIPT
+------------------------------------------------------------
+1. Select elements: getElementById, querySelector
+2. Read/write content: innerText, innerHTML, value
+3. Respond to events: click, input, submit
+4. Understand attributes: id, class, value, src, href
+5. Create dynamic elements: JS can add/remove <li>, <div>, <img>, etc.
+
+Goal achieved: Ready to interact with HTML using JavaScript.
+============================================================

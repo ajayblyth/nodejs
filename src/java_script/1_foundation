@@ -1,0 +1,236 @@
+============================================================
+FULL-STACK JAVASCRIPT – DAY 1 CHEAT SHEET
+(BROWSER + NODE.JS + HTML INTERACTIONS)
+============================================================
+
+========================
+1. HTML BASICS
+========================
+1.1 Document Structure
+------------------------------------------------------------
+<!DOCTYPE html> → HTML5
+<html>          → Root
+<head>          → Metadata
+  <title>Page Title</title>
+</head>
+<body>          → Visible content
+  <!-- Your content -->
+</body>
+</html>
+
+Goal: JS manipulates <body> elements.
+
+1.2 Headings & Paragraphs
+------------------------------------------------------------
+<h1> to <h6> → Headings
+<p>         → Paragraph
+
+Goal: JS changes text dynamically.
+
+1.3 Links & Images
+------------------------------------------------------------
+<a href="https://example.com">Link</a>
+<img src="image.jpg" alt="Desc">
+
+Goal: JS changes href/src dynamically.
+
+1.4 Lists
+------------------------------------------------------------
+<ul>/<ol> with <li>
+Goal: JS adds/removes items dynamically.
+
+1.5 Div & Span
+------------------------------------------------------------
+<div> → Block container
+<span> → Inline container
+Goal: JS selects these to modify content/style.
+
+1.6 Forms & Inputs
+------------------------------------------------------------
+<form>, <input type="text/button/checkbox/radio">, <textarea>
+Goal: JS reads/writes .value, handles events.
+
+1.7 Buttons
+------------------------------------------------------------
+<button id="btn">Click</button>
+Goal: JS detects clicks.
+
+1.8 Script Tags
+------------------------------------------------------------
+<script>Inline JS</script>
+<script src="app.js"></script>
+Goal: Link JS to HTML.
+
+1.9 Important Attributes
+------------------------------------------------------------
+id, class, name, value, src, href
+Goal: JS uses these to select/manipulate elements.
+
+1.10 Comments
+------------------------------------------------------------
+<!-- HTML comment -->
+
+1.11 Combined HTML Example
+------------------------------------------------------------
+<!DOCTYPE html>
+<html>
+<head>
+  <title>JS Interaction Example</title>
+</head>
+<body>
+
+<h1 id="mainHeading">Welcome!</h1>
+<p id="intro">This is a sample page.</p>
+
+<a href="https://example.com" id="link">Go to Example</a>
+<img src="logo.png" alt="Logo" id="logo">
+
+<ul id="fruitsList">
+  <li>Apple</li>
+  <li>Banana</li>
+</ul>
+
+<div id="container">
+  <span>Inline text</span>
+</div>
+
+<form id="userForm">
+  <input type="text" id="nameInput" value="Ajay">
+  <input type="button" id="submitBtn" value="Submit">
+</form>
+
+<script>
+  // Change heading text
+  document.getElementById('mainHeading').innerText = "Hello, JS!";
+  // Read input value
+  let username = document.getElementById('nameInput').value;
+  console.log("User:", username);
+  // Add new list item dynamically
+  let ul = document.getElementById('fruitsList');
+  let li = document.createElement('li'); li.innerText='Mango';
+  ul.appendChild(li);
+  // Button click
+  document.getElementById('submitBtn').addEventListener('click', function(){
+    alert('Submitted: '+document.getElementById('nameInput').value);
+  });
+  // Change link dynamically
+  document.getElementById('link').href='https://google.com';
+  document.getElementById('link').innerText='Go to Google';
+</script>
+
+</body>
+</html>
+
+============================================================
+2. JAVASCRIPT BASICS
+============================================================
+2.1 Variables
+------------------------------------------------------------
+let x=10; const y=20; var z=30
+Goal: Store data
+Example: let name='Ajay'; const pi=3.14;
+
+2.2 Data Types
+------------------------------------------------------------
+String, Number, Boolean, Array, Object, Null, Undefined
+
+2.3 Arrays & Objects
+------------------------------------------------------------
+Arrays: let numbers=[10,20]; numbers[0]→10
+Objects: let person={name:"Ajay",age:25};
+person.name → "Ajay"
+Object.keys(obj), Object.values(obj), Object.entries(obj)
+
+Array of Objects:
+const people=[{name:"bob",age:20},{name:"anna",age:25}];
+
+2.4 Operators
+------------------------------------------------------------
+Arithmetic: +,-,*,/,% ,++,--
+Comparison: ==, ===, !=, !==, >, <, >=, <=
+Logical: &&, ||, !
+
+2.5 Conditional Statements
+------------------------------------------------------------
+if/else if/else, switch
+Example:
+if(age>=18){console.log("Adult");}else{console.log("Minor");}
+
+2.6 Loops
+------------------------------------------------------------
+for: for(let i=0;i<5;i++){console.log(i);}
+while: let i=0; while(i<5){console.log(i);i++;}
+do..while: let j=0; do{console.log(j);j++;}while(j<5);
+for..of: let arr=["a","b"]; for(let item of arr){console.log(item);}
+
+2.7 Functions
+------------------------------------------------------------
+Declaration: function greet(name){return `Hello ${name}`;}
+Expression: const greet=function(name){return `Hello ${name}`;}
+Arrow: const greet=(name)=>`Hello ${name}`;
+
+2.8 Map (Array Transformation)
+------------------------------------------------------------
+const doubled=[1,2,3].map(n=>n*2); // [2,4,6]
+const names=people.map(p=>p.name); // ["bob","anna"]
+Transform objects:
+const newPeople=people.map(p=>({firstName:p.name.toUpperCase(), oldAge:p.age+20}));
+
+2.9 Template Literals
+------------------------------------------------------------
+let name="Ajay"; console.log(`Hello ${name}`);
+
+============================================================
+3. DOM & EVENTS (BROWSER SPECIFIC)
+============================================================
+Select: getElementById, querySelector, querySelectorAll
+Modify: innerText, innerHTML, value
+Change style: element.style.color='red'
+Create elements: createElement, appendChild
+Events: addEventListener('click'/'input'/'submit',callback)
+
+============================================================
+4. NODE.JS BASICS
+============================================================
+4.1 Modules
+------------------------------------------------------------
+Export: module.exports={func1,var1};
+Import: const mod=require('./mod.js'); // CommonJS
+        import mod from './mod.js';      // ES6 Modules
+
+4.2 Console & Debugging
+------------------------------------------------------------
+console.log(), console.error(), console.table()
+
+4.3 File System (fs)
+------------------------------------------------------------
+const fs=require('fs');
+Sync: readFileSync, writeFileSync
+Async callbacks: readFile('file.txt','utf-8',(err,data)=>{})
+Async promises: fs.promises.readFile('file.txt','utf-8').then(...).catch(...)
+
+4.4 Async & Promises
+------------------------------------------------------------
+Callback: fs.readFile(...,(err,data)=>{})
+Promise: new Promise((resolve,reject)=>{}).then(...).catch(...)
+Async/Await:
+async function readFileAsync(){
+ try{let data=await fs.promises.readFile('file.txt','utf-8'); console.log(data);}
+ catch(err){console.error(err);}
+}
+
+============================================================
+5. COMMENTS
+------------------------------------------------------------
+JS: // single line, /* multi-line */
+HTML: <!-- comment -->
+
+============================================================
+SUMMARY – FULL-STACK READY
+------------------------------------------------------------
+- Core JS: variables, loops, conditionals, functions, arrays, objects, map(), template literals
+- Browser only: DOM manipulation, events
+- Node only: modules, console, fs, async/promises
+- HTML knowledge for JS interactions
+- Ready to start Node.js backend development
+============================================================

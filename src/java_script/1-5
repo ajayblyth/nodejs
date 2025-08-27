@@ -1,0 +1,151 @@
+------------------------------------------------------------
+          JAVASCRIPT NUGGETS — VIDEOS 1–5 (Expanded)
+                 (Coding Addict — Notepad format)
+------------------------------------------------------------
+
+Video 1: Javascript Nuggets - Map
+– Explanation (paraphrased from video):
+   “map() lets you take any array and make a brand-new one by transforming each element using a function you provide
+    — super useful when you want to extract or modify data without changing the original.”
+
+• Purpose: transform each element → returns NEW array (same length).
+• Syntax: array.map((item, index, arr) => returnValue)
+
+Code examples (exactly from video):
+const people = [
+  { name: "bob",  age: 20, position: "developer" },
+  { name: "anna", age: 25, position: "designer"  },
+  { name: "susy", age: 30, position: "the boss"  },
+  { name: "john", age: 26, position: "intern"    }
+];
+
+// extract ages
+const ages = people.map(p => p.age); // → [20,25,30,26]
+
+// extract names
+const names = people.map(p => p.name);          // → ["bob","anna","susy","john"]
+
+// transform objects
+const newPeople = people.map(p => {
+  return { firstName: p.name.toUpperCase(), oldAge: p.age + 20 };
+});  /* → [
+       { firstName: "BOB",  oldAge: 40 },
+       { firstName: "ANNA", oldAge: 45 },
+       { firstName: "SUSY", oldAge: 50 },
+       { firstName: "JOHN", oldAge: 46 }
+     ] */
+
+// map for DOM templates
+const result = people.map(p => `<h2>${p.name}</h2>`);
+document.body.innerHTML = result.join("");
+
+Note: If the callback doesn’t return anything, you’ll end up with an array full of undefined.
+
+------------------------------------------------------------
+Video 2: Javascript Nuggets - Unique Values (ES6)
+– Explanation:
+   “Want to show categories on a menu — but only once? Use Set and spread to remove duplicates quickly.”
+
+• Goal: derive unique list (e.g., categories) using Set + spread.
+
+Code:
+const menu = [
+  { title: "pancakes", category: "breakfast" },
+  { title: "burger",   category: "lunch"     },
+  { title: "steak",    category: "dinner"    },
+  { title: "bacon",    category: "breakfast" }
+];
+
+// unique categories, "all" prefixed
+const categories = ["all", ...new Set(menu.map(item => item.category))];
+// → ["all","breakfast","lunch","dinner"]
+
+Note: Set removes duplicates; spread converts the Set back to an array.
+
+------------------------------------------------------------
+Video 3: Javascript Nuggets - Dynamic Object Keys
+– Explanation:
+   “When building objects dynamically — or passing props/functions where you don’t know the key names ahead of time — computed keys in objects are incredibly handy.”
+
+• Purpose: set object keys from variables using bracket notation / computed property names.
+
+Code:
+const key = "email";
+const value = "bob@example.com";
+
+const user = { name: "bob" };
+user[key] = value;
+// → { name: "bob", email: "bob@example.com" }
+
+// dynamic key inside literal
+const id = "product-123";
+const stockKey = "inStock";
+const product = { id, [stockKey]: true };
+// → { id: "product-123", inStock: true }
+
+// helper function
+function update(obj, prop, val) {
+  return { ...obj, [prop]: val };
+}
+update({ a: 1 }, "b", 2); // → { a:1, b:2 }
+
+Note: bracket [prop] evaluates variable or expression; dot syntax requires hard-coded key.
+
+------------------------------------------------------------
+Video 4: Javascript Nuggets - Filter and Find
+– Explanation:
+   “Use filter when you want *all* items matching a condition — and find when you're just looking for the *first* match. Clean and fast.”
+
+• filter(): returns array of all matching elements.
+• find(): returns first match or undefined.
+
+Code:
+const people2 = [
+  { name: "bob",  age: 20, position: "developer", id: 1 },
+  { name: "anna", age: 25, position: "designer",  id: 2 },
+  { name: "susy", age: 30, position: "the boss",  id: 3 },
+  { name: "john", age: 26, position: "intern",    id: 4 }
+];
+
+// filter by position
+const designers = people2.filter(p => p.position === "designer");
+// → [ { name:"anna", … } ]
+
+// filter by age > 25
+const older = people2.filter(p => p.age > 25); // → susy, john
+
+// find by id === 3
+const person = people2.find(p => p.id === 3);
+// → { name:"susy", … }
+
+Note: filter always returns an array; find returns a single object or undefined.
+
+------------------------------------------------------------
+Video 5: Javascript Nuggets - Reduce Basics
+– Explanation:
+   “Reduce is like magic — fold an array into any result you want. Sum numbers, tally carts — just define your reducer logic and initial value.”
+
+• Purpose: reduce array to single value (sum, object, etc.).
+
+Code:
+const numbers = [10, 20, 30, 40];
+// sum
+const total = numbers.reduce((acc, num) => acc + num, 0);
+// → 100
+
+// cart total example
+const cart = [
+  { title: "book", price: 10, amount: 2 },
+  { title: "pen",  price: 5,  amount: 4 },
+  { title: "bag",  price: 50, amount: 1 }
+];
+const totalCart = cart.reduce((acc, item) => {
+  return acc + item.price * item.amount;
+}, 0);
+// → 90
+
+Note: Always initialize properly (0 for numbers, {} for objects). Ideal for sums, grouping, object building.
+
+------------------------------------------------------------
+END — VIDEOS 1 TO 5 (with explanation)
+------------------------------------------------------------
