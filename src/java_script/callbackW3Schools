@@ -1,0 +1,139 @@
+
+
+function myDisplayer(message){
+    console.log(message);
+}
+
+function myFirst(){
+    myDisplayer("Hello");
+}
+function mySecond(){
+    myDisplayer("Goodbye");
+}
+
+-----------------------------------------------------
+// Function that "displays" output (Node.js style)
+function myDisplayer(some) {
+  console.log(some);
+}
+
+// Function that calculates sum
+function myCalculator(num1, num2) {
+  let sum = num1 + num2;
+  return sum;
+}
+
+// Using the functions
+let result = myCalculator(5, 5);
+myDisplayer(result);
+
+----------------------------------------------------------
+
+JavaScript Callbacks
+A callback is a function passed as an argument to another function.
+
+Using a callback, you could call the calculator function (myCalculator) with a callback (myCallback), and let the calculator function run the callback after the calculation is finished:
+
+Example
+// Callback function
+function myDisplayer(some) {
+  console.log("Result is: " + some);
+}
+
+// Function with callback
+function myCalculator(num1, num2, myCallback) {
+  let sum = num1 + num2;
+  myCallback(sum);
+}
+
+// Passing function as callback
+myCalculator(5, 5, myDisplayer); //myCallback got myDisplayer as value inside myCalculator
+
+
+In the example above, myDisplayer is a called a callback function.
+
+It is passed to myCalculator() as an argument.
+
+Note
+When you pass a function as an argument, remember not to use parenthesis.
+
+Right: myCalculator(5, 5, myDisplayer);
+
+Wrong: myCalculator(5, 5, myDisplayer());
+
+-------------------------------------------------
+
+//------------------------------------------------------------
+// 1. DIRECT CALL (Fixed behavior)
+//------------------------------------------------------------
+function myCalculatorDirect(num1, num2) {
+  let sum = num1 + num2;
+  myDisplayer(sum); // Fixed → always calls myDisplayer
+}
+
+function myDisplayer(result) {
+  console.log("Result is: " + result);
+}
+
+// Direct call usage
+
+myCalculatorDirect(5, 5);     // Output → Result is: 10
+
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+// 1. CALLBACK EXAMPLE
+//------------------------------------------------------------
+
+// Function with callback
+function myCalculator(num1, num2, myCallback) {
+  let sum = num1 + num2;
+  myCallback(sum); // Execute the callback function
+}
+
+// Example callback functions
+function myDisplayer(result) {
+  console.log("Result is: " + result);
+}
+
+function myLogger(result) {
+  console.log("Logging result: " + result);
+}
+
+function myDouble(result) {
+  console.log("Double result: " + (result * 2));
+}
+
+myCalculator(5, 5, myDisplayer); // Output → Result is: 10
+myCalculator(5, 5, myLogger);    // Output → Logging result: 10
+myCalculator(5, 5, myDouble);    // Output → Double result: 20
+
+//------------------------------------------------------------
+// 3. FINAL THOUGHT
+//------------------------------------------------------------
+// - Direct call → fixed, only one behavior
+// - Callback → reusable, flexible
+//   ("I calculate, YOU decide what to do with result")
+
+--------------------------------------------------------
+ASYNCHRONOUS
+
+"I will finish later!"
+
+Functions running in parallel with other functions are called asynchronous
+
+A good example is JavaScript setTimeout()
+
+// Callback function
+function myDisplayer(something) {
+  console.log("Result is: " + something);
+}
+
+// Calculator function
+function myCalculator(num1, num2, myCallback) {
+  let sum = num1 + num2;
+  myCallback(sum);  // pass result to callback
+}
+
+// Call with callback
+myCalculator(5, 5, myDisplayer);

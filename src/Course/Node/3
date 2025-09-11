@@ -1,0 +1,122 @@
+-------------------------------------------------------------
+NODE.JS STREAMS: COMPLETE BEGINNER GUIDE
+-------------------------------------------------------------
+
+1. What are Streams?
+-------------------
+1.1 Streams allow sequential reading or writing of data.
+1.2 Useful for:
+    - Continuous data sources
+    - Large files
+    - Real-time processing
+1.3 Stream types in Node.js:
+    a) Writable   → Write data sequentially
+    b) Readable   → Read data sequentially
+    c) Duplex     → Read & Write sequentially
+    d) Transform  → Modify data while reading/writing
+1.4 Streams extend EventEmitter → support events like 'data', 'end', 'error', 'open', 'close'.
+
+2. Why use Streams?
+------------------
+2.1 Avoid loading entire file into memory (especially big files)
+2.2 Handles data in chunks (default 64 KB per chunk)
+2.3 Improves performance and prevents memory overflow
+
+3. Readable Stream Example
+--------------------------
+3.1 Setup:
+const fs = require('fs');
+const stream = fs.createReadStream('./content/big.txt', { encoding: 'utf8' });
+
+3.2 Listen to events:
+stream.on('data', (chunk) => {
+    console.log('Chunk received:', chunk);
+});
+
+stream.on('error', (err) => {
+    console.log('Error:', err);
+});
+
+stream.on('end', () => {
+    console.log('File reading finished');
+});
+
+3.3 Notes:
+- Each 'data' event delivers a chunk of file (default 64 KB)
+- 'error' triggers if file/path is invalid
+- 'end' triggers when file fully read
+- We avoid storing full file in memory
+
+4. Controlling Stream Options
+-----------------------------
+4.1 highWaterMark → sets chunk size
+const stream = fs.createReadStream('./content/big.txt', { encoding: 'utf8', highWaterMark: 90000 });
+- Here chunk size = 90 KB
+
+4.2 encoding → set text encoding (utf8, ascii, etc.)
+const stream = fs.createReadStream('./content/big.txt', { encoding: 'utf8' });
+
+5. Practical Use Case: Sending File via HTTP Server
+---------------------------------------------------
+5.1 Without stream (sync read):
+const http = require('http');
+const fs = require('fs');
+
+const server = http.createServer((req, res) => {
+    const text = fs.readFileSync('./content/big.txt', 'utf8');
+    res.end(text);
+});
+
+server.listen(5000);
+
+- Problem: loads entire file into memory → bad for large files
+
+5.2 With stream (recommended):
+const http = require('http');
+const fs = require('fs');
+
+const server = http.createServer((req, res) => {
+    const fileStream = fs.createReadStream('./content/big.txt', { encoding: 'utf8' });
+
+    // Error handling
+    fileStream.on('error', (err) => {
+        res.end(`Error: ${err}`);
+    });
+
+    // Pipe read stream to response (write stream)
+    fileStream.pipe(res);
+});
+
+server.listen(5000);
+
+5.3 Notes:
+- fileStream.pipe(res) sends chunks progressively
+- Browser sees chunked response → efficient, no memory overflow
+- Events still usable: 'open', 'error', 'end'
+
+6. Key Stream Events
+-------------------
+6.1 data → fired on each chunk read
+6.2 end  → fired when reading finishes
+6.3 error → fired on read/write error
+6.4 open → stream opened
+6.5 close → stream closed
+
+7. Advantages of Streams
+------------------------
+7.1 Efficient memory usage
+7.2 Can process large files in chunks
+7.3 Integrates with EventEmitter → flexible
+7.4 Can chain/pipe multiple streams
+    - Example: Readable → Transform → Writable
+
+8. Summary / Takeaways
+----------------------
+- Streams = sequential read/write of data
+- Four types: Writable, Readable, Duplex, Transform
+- Built-in Node modules (FS, HTTP, zlib) use streams
+- Default chunk size = 64 KB (change via highWaterMark)
+- Use pipe() to send read stream into write stream efficiently
+- Events: data, end, error, open, close
+- Recommended for big files or real-time data sources
+-------------------------------------------------------------

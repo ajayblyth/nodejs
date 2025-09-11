@@ -1,229 +1,856 @@
 ============================================================
-FULL-STACK JAVASCRIPT – DAY 1 CHEAT SHEET
-(BROWSER + NODE.JS + HTML INTERACTIONS)
+FULL-STACK JAVASCRIPT + NODE.JS CHEAT SHEET
 ============================================================
 
-========================
-1. HTML BASICS
-========================
-1.1 Document Structure
+1. HTML BASICS – FOUNDATION FOR JAVASCRIPT INTERACTIONS
 ------------------------------------------------------------
-<!DOCTYPE html> → HTML5
-<html>          → Root
-<head>          → Metadata
+<!DOCTYPE html>          → Defines HTML5
+<html>                   → Root element
+<head>                   → Metadata: title, links, scripts
   <title>Page Title</title>
 </head>
-<body>          → Visible content
-  <!-- Your content -->
+<body>                   → Visible page content
+  <!-- Content goes here -->
 </body>
 </html>
 
-Goal: JS manipulates <body> elements.
-
-1.2 Headings & Paragraphs
-------------------------------------------------------------
+Headings & Paragraphs:
 <h1> to <h6> → Headings
-<p>         → Paragraph
+<p> → Paragraph
 
-Goal: JS changes text dynamically.
-
-1.3 Links & Images
-------------------------------------------------------------
+Links & Images:
 <a href="https://example.com">Link</a>
-<img src="image.jpg" alt="Desc">
+<img src="image.jpg" alt="Description">
 
-Goal: JS changes href/src dynamically.
+Lists:
+<ul>/<ol> with <li> items
 
-1.4 Lists
-------------------------------------------------------------
-<ul>/<ol> with <li>
-Goal: JS adds/removes items dynamically.
+Div & Span:
+<div> → block container
+<span> → inline container
 
-1.5 Div & Span
-------------------------------------------------------------
-<div> → Block container
-<span> → Inline container
-Goal: JS selects these to modify content/style.
+Forms & Inputs:
+<form>, <input type="text|number|checkbox|radio">, <textarea>, <button>
 
-1.6 Forms & Inputs
-------------------------------------------------------------
-<form>, <input type="text/button/checkbox/radio">, <textarea>
-Goal: JS reads/writes .value, handles events.
-
-1.7 Buttons
-------------------------------------------------------------
-<button id="btn">Click</button>
-Goal: JS detects clicks.
-
-1.8 Script Tags
-------------------------------------------------------------
-<script>Inline JS</script>
-<script src="app.js"></script>
-Goal: Link JS to HTML.
-
-1.9 Important Attributes
-------------------------------------------------------------
+Attributes important for JS:
 id, class, name, value, src, href
-Goal: JS uses these to select/manipulate elements.
 
-1.10 Comments
-------------------------------------------------------------
-<!-- HTML comment -->
+Script Tags:
+Inline: <script>JS code</script>
+External: <script src="app.js"></script>
 
-1.11 Combined HTML Example
+Comments: <!-- HTML Comment -->
+
+============================================================
+HTML FULL EXAMPLE FOR JS INTERACTIONS
 ------------------------------------------------------------
 <!DOCTYPE html>
 <html>
 <head>
   <title>JS Interaction Example</title>
+  <style>
+    #container { padding: 10px; border: 1px solid #000; }
+    .highlight { color: red; font-weight: bold; }
+  </style>
 </head>
 <body>
 
-<h1 id="mainHeading">Welcome!</h1>
-<p id="intro">This is a sample page.</p>
+  <h1 id="mainTitle">Welcome!</h1>
+  <p id="intro">This is a sample page.</p>
 
-<a href="https://example.com" id="link">Go to Example</a>
-<img src="logo.png" alt="Logo" id="logo">
+  <a id="myLink" href="https://example.com">Go to Example</a><br><br>
+  <img id="myImage" src="image.jpg" alt="Sample Image" width="100"><br><br>
 
-<ul id="fruitsList">
-  <li>Apple</li>
-  <li>Banana</li>
-</ul>
+  <ul id="fruitList">
+    <li>Apple</li>
+    <li>Banana</li>
+  </ul>
+  <ol id="numList">
+    <li>One</li>
+    <li>Two</li>
+  </ol>
 
-<div id="container">
-  <span>Inline text</span>
-</div>
+  <div id="container">
+    <span id="spanText">Hello Span</span>
+  </div>
 
-<form id="userForm">
-  <input type="text" id="nameInput" value="Ajay">
-  <input type="button" id="submitBtn" value="Submit">
-</form>
+  <form id="myForm">
+    Name: <input type="text" id="nameInput" value="Ajay"><br>
+    Age: <input type="number" id="ageInput" value="25"><br>
+    <input type="checkbox" id="check1"> Accept Terms<br>
+    <input type="radio" name="gender" value="male"> Male
+    <input type="radio" name="gender" value="female"> Female<br>
+    <button type="button" id="submitBtn">Submit</button>
+  </form>
 
-<script>
-  // Change heading text
-  document.getElementById('mainHeading').innerText = "Hello, JS!";
-  // Read input value
-  let username = document.getElementById('nameInput').value;
-  console.log("User:", username);
-  // Add new list item dynamically
-  let ul = document.getElementById('fruitsList');
-  let li = document.createElement('li'); li.innerText='Mango';
-  ul.appendChild(li);
-  // Button click
-  document.getElementById('submitBtn').addEventListener('click', function(){
-    alert('Submitted: '+document.getElementById('nameInput').value);
-  });
-  // Change link dynamically
-  document.getElementById('link').href='https://google.com';
-  document.getElementById('link').innerText='Go to Google';
-</script>
+  <script>
+    // DOM Selection
+    const title = document.getElementById('mainTitle');
+    const intro = document.getElementById('intro');
+    const link = document.getElementById('myLink');
+    const image = document.getElementById('myImage');
+    const fruitList = document.getElementById('fruitList');
+    const container = document.getElementById('container');
+    const spanText = document.getElementById('spanText');
+    const nameInput = document.getElementById('nameInput');
+    const ageInput = document.getElementById('ageInput');
+    const submitBtn = document.getElementById('submitBtn');
+
+    // Event Example
+    submitBtn.addEventListener('click', function(){
+      title.innerText = `Hello ${nameInput.value}`;
+      intro.innerText = `You are ${ageInput.value} years old.`;
+      spanText.classList.toggle('highlight');
+      fruitList.innerHTML += '<li>Orange</li>';
+      link.href = 'https://google.com';
+      image.src = 'newimage.jpg';
+    });
+
+    // Array & Map Example
+    const people = [{name:"bob", age:20}, {name:"anna", age:25}];
+    const names = people.map(p => p.name);
+    console.log(names);
+  </script>
 
 </body>
 </html>
 
+Goal: Covers headings, paragraphs, links, images, lists, div, span, forms, inputs, buttons. JS interacts via events, style, content, and arrays.
+
 ============================================================
 2. JAVASCRIPT BASICS
 ============================================================
-2.1 Variables
+JAVASCRIPT VARIABLES
+============================================================
+
+1. WHAT ARE VARIABLES?
+   - Variables are containers for storing data values.
+   - They allow us to reuse and manipulate data in programs.
+
 ------------------------------------------------------------
-let x=10; const y=20; var z=30
-Goal: Store data
-Example: let name='Ajay'; const pi=3.14;
+1.2. DECLARING VARIABLES
+------------------------------------------------------------
+   var     → Old way (function-scoped, can be redeclared)
+   let     → Modern way (block-scoped, can be reassigned)
+   const   → Modern way (block-scoped, cannot be reassigned)
+
+------------------------------------------------------------
+1.3. SYNTAX
+------------------------------------------------------------
+   var x = 10;         // function scoped
+   let y = 20;         // block scoped, can reassign
+   const z = 30;       // block scoped, cannot reassign
+
+------------------------------------------------------------
+1.4. DIFFERENCE TABLE
+------------------------------------------------------------
+Keyword   Scope        Redeclare   Reassign   Hoisting
+------------------------------------------------------------
+var       Function     Yes        Yes        Yes (undefined)
+let       Block        No         Yes        No (TDZ*)
+const     Block        No         No         No (TDZ*)
+------------------------------------------------------------
+*TDZ = Temporal Dead Zone (can’t access before declaration)
+
+------------------------------------------------------------
+1.5. NAMING RULES
+------------------------------------------------------------
+   ✅ Can contain letters, digits, _, $
+   ✅ Must start with a letter, _ or $
+   ❌ Cannot start with a digit
+   ❌ Reserved words not allowed (e.g., let, var, const)
+
+------------------------------------------------------------
+1.6. EXAMPLES
+------------------------------------------------------------
+   var name = "Ajay";
+   let age = 25;
+   const pi = 3.14159;
+
+   age = 26;       // ✅ allowed
+   pi = 3.14;      // ❌ error, const cannot be reassigned
+
+------------------------------------------------------------
+1.7. BEST PRACTICES
+------------------------------------------------------------
+   - Always prefer 'let' and 'const' over 'var'
+   - Use 'const' by default, unless reassignment is needed
+   - Use descriptive names (e.g., userName, totalPrice)
+   - Avoid global variables whenever possible
+============================================================
 
 2.2 Data Types
-------------------------------------------------------------
-String, Number, Boolean, Array, Object, Null, Undefined
+String → "Hello", 'World' (both single/double quotes valid)
+Number → 10, 3.14
+Boolean → true, false
+Array → [1,2,3], ["a","b"]
+Object → {name:"Ajay", age:25}
+Null → empty value
+Undefined → declared but not assigned
 
-2.3 Arrays & Objects
 ------------------------------------------------------------
-Arrays: let numbers=[10,20]; numbers[0]→10
-Objects: let person={name:"Ajay",age:25};
+2.3 ARRAYS & OBJECTS
+------------------------------------------------------------
+Arrays: Ordered list of items
+let numbers = [10,20];
+numbers[0] → 10   // Access first element
+
+Objects: Collection of named properties
+let person = {name:"Ajay", age:25};
 person.name → "Ajay"
-Object.keys(obj), Object.values(obj), Object.entries(obj)
 
-Array of Objects:
-const people=[{name:"bob",age:20},{name:"anna",age:25}];
+Utility functions:
+Object.keys(obj) → array of keys
+Object.values(obj) → array of values
+Object.entries(obj) → array of [key, value] pairs
 
-2.4 Operators
+Array of Objects (common in real data):
+const people = [
+  {name:"bob", age:20},
+  {name:"anna", age:25}
+];
+people[0].name → "bob"
+
+Goal: Store multiple related values; arrays for lists, objects for structured data.
+
 ------------------------------------------------------------
-Arithmetic: +,-,*,/,% ,++,--
-Comparison: ==, ===, !=, !==, >, <, >=, <=
-Logical: &&, ||, !
-
-2.5 Conditional Statements
+2.4 OPERATORS – JAVASCRIPT
 ------------------------------------------------------------
-if/else if/else, switch
+
+// Arithmetic Operators – for numeric calculations
++   → Addition         : 5 + 3   → 8
+-   → Subtraction      : 5 - 3   → 2
+*   → Multiplication   : 5 * 3   → 15
+/   → Division         : 10 / 2  → 5
+%   → Remainder        : 10 % 3  → 1
+++  → Increment        : let x=5; x++; console.log(x) → 6
+--  → Decrement        : let x=5; x--; console.log(x) → 4
+
+// Comparison Operators – check values
+==   → Equal value (type coercion)    : 5 == "5" → true
+===  → Strict equal (no type coercion): 5 === "5" → false
+!=   → Not equal (type coercion)      : 5 != "6" → true
+!==  → Strict not equal (no coercion) : 5 !== "5" → true
+>    → Greater than                    : 5 > 3 → true
+<    → Less than                       : 5 < 3 → false
+>=   → Greater or equal                : 5 >= 5 → true
+<=   → Less or equal                   : 3 <= 5 → true
+
+// Logical Operators – combine conditions
+&&   → AND     : (5>3 && 2<4) → true
+||   → OR      : (5>3 || 2>4) → true
+!    → NOT     : !(5>3) → false
+
+============================================================
+JAVASCRIPT TRUTHY & FALSY VALUES – CHEAT SHEET
+============================================================
+
+1. FALSY VALUES
+------------------------------------------------------------
+These behave like false in boolean contexts:
+
+false         → Boolean false
+0             → Number zero
+""            → Empty string
+null          → No value
+undefined     → Variable declared but not assigned
+NaN           → Not a Number
+document.all  → Special quirk in browsers (rarely used)
+
+Examples:
+if(0){ console.log("Runs?"); }         // Won't run
+if(""){ console.log("Empty?"); }       // Won't run
+if(null){ console.log("Null?"); }      // Won't run
+if(undefined){ console.log("Undefined?"); } // Won't run
+
+Goal: Use to check "empty" or invalid values easily
+
+------------------------------------------------------------
+2. TRUTHY VALUES
+------------------------------------------------------------
+Everything else is truthy, behaves like true:
+
+Non-zero numbers      → 1, -5, 3.14
+Non-empty strings     → "Hello", "0"
+Arrays (even empty)   → [], [1,2,3]
+Objects (even empty)  → {}, {name:"Ajay"}
+Functions             → function(){}, ()=>{}
+
+Examples:
+if(5){ console.log("Runs"); }          // Runs
+if("Hello"){ console.log("Runs"); }    // Runs
+if([]){ console.log("Array"); }        // Runs
+if({}){ console.log("Object"); }       // Runs
+if(()=>{}){ console.log("Function"); } // Runs
+
+Goal: Any valid value not listed as falsy is truthy
+
+------------------------------------------------------------
+3. LOGICAL OPERATORS & SHORT-CIRCUITING
+------------------------------------------------------------
+- || (OR) → Returns first truthy value
+- && (AND) → Returns first falsy value or last truthy
+
+Examples:
+0 || "default"        → "default"  (0 is falsy, so use next value)
+5 || "default"        → 5          (5 is truthy, returned immediately)
+0 && "yes"            → 0          (0 is falsy, returned immediately)
+5 && "yes"            → "yes"      (both truthy, last value returned)
+
+Goal: Use for default values, conditional assignments, and chaining
+
+------------------------------------------------------------
+4. USAGE TIPS
+------------------------------------------------------------
+- Useful in if/while conditions
+- Can simplify default assignments:
+    let username = inputName || "Guest";  // Uses "Guest" if inputName falsy
+- Can combine multiple conditions using && / ||
+
+============================================================
+SUMMARY
+------------------------------------------------------------
+- Falsy → behaves like false
+- Truthy → behaves like true
+- Logical operators return actual value, not just true/false
+- Essential for clean JS code, Node.js or Browser
+
+Goal achieved: Ready to reason about conditions, defaults, and short-circuiting
+============================================================
+
+
+// Special notes / differences from Java
+- == in JS does type coercion (converts string "5" to number 5), Java always checks type separately.
+- === checks both value and type, similar to Java’s == for primitives but stricter.
+- Logical operators behave like Java, but JS allows short-circuiting with non-boolean values:
+      console.log(0 || "default") → "default"
+      console.log(5 && "yes") → "yes"
+- Arithmetic with strings: "5" + 3 → "53" (concatenation), unlike Java which requires explicit conversion.
+
+
+
+
+------------------------------------------------------------
+2.5 CONDITIONAL STATEMENTS
+------------------------------------------------------------
+if / else if / else → Execute code based on condition
+if(age >= 18){ console.log("Adult"); }
+else{ console.log("Minor"); }
+
+switch → Multiple possible values
+let day = 2;
+switch(day){
+  case 1: console.log("Monday"); break;
+  case 2: console.log("Tuesday"); break;
+  default: console.log("Other Day");
+}
+
+Goal: Decide what code runs depending on situation or input.
+
+------------------------------------------------------------
+2.6 LOOPS
+------------------------------------------------------------
+for → Repeat code a set number of times
+for(let i=0; i<5; i++){ console.log(i); }
+
+while → Repeat while condition is true
+let i=0;
+while(i<5){ console.log(i); i++; }
+
+do..while → Execute at least once, then check condition
+let j=0;
+do{ console.log(j); j++; } while(j<5);
+
+------------------------------------------------------------
+FOR..OF LOOP (JavaScript)
+------------------------------------------------------------
+Syntax:
+for (let item of iterable) {
+    // use item
+}
+
 Example:
-if(age>=18){console.log("Adult");}else{console.log("Minor");}
+let arr = ["a","b"];
+for (let item of arr){
+    console.log(item);
+}
+// Output:
+// a
+// b
 
-2.6 Loops
-------------------------------------------------------------
-for: for(let i=0;i<5;i++){console.log(i);}
-while: let i=0; while(i<5){console.log(i);i++;}
-do..while: let j=0; do{console.log(j);j++;}while(j<5);
-for..of: let arr=["a","b"]; for(let item of arr){console.log(item);}
+Goal: Iterate over each element of an array (or other iterable like strings, Sets) directly, without using an index.
 
-2.7 Functions
 ------------------------------------------------------------
-Declaration: function greet(name){return `Hello ${name}`;}
-Expression: const greet=function(name){return `Hello ${name}`;}
-Arrow: const greet=(name)=>`Hello ${name}`;
+Java Comparison:
+------------------------------------------------------------
+- JavaScript: for..of → directly gives element
+- Java: enhanced for loop (for-each) → directly gives element
 
-2.8 Map (Array Transformation)
+Java example:
+String[] arr = {"a","b"};
+for (String item : arr){
+    System.out.println(item);
+}
+// Output same as JS
 ------------------------------------------------------------
-const doubled=[1,2,3].map(n=>n*2); // [2,4,6]
-const names=people.map(p=>p.name); // ["bob","anna"]
+Note for Java devs:
+- No need for index unless you want it.
+- Works with any iterable: arrays, strings, Sets, Maps (for Maps you can do `for([key,value] of map)`)
+
+Goal: Makes looping cleaner compared to classic `for` with index.
+
+
+------------------------------------------------------------
+2.7 FUNCTIONS – Explained for Java Developers
+------------------------------------------------------------
+1. Function Declaration
+------------------------------------------------------------
+JS:
+function greet(name){
+    return `Hello ${name}`;
+}
+- Named function
+- Hoisted → Can call it before it appears in code
+- 'this' depends on how function is called
+
+Java equivalent:
+public String greet(String name){
+    return "Hello " + name;
+}
+
+Note: Similar to a normal method in a Java class, except JS functions can exist outside classes.
+
+------------------------------------------------------------
+2. Function Expression
+------------------------------------------------------------
+JS:
+const greet = function(name){
+    return `Hello ${name}`;
+};
+- Stored in a variable
+- Not hoisted → Cannot call before assignment
+- 'this' depends on call context
+
+Java comparison:
+- Like creating an instance of an anonymous class implementing a functional interface:
+Runnable r = new Runnable(){
+    public void run(){ System.out.println("Hi"); }
+};
+
+- JS function expression is more flexible, can be passed around as a variable
+
+------------------------------------------------------------
+3. Arrow Function
+------------------------------------------------------------
+JS:
+const greet = (name) => `Hello ${name}`;
+- Shorter syntax
+- Implicit return if one expression
+- Does NOT have its own 'this' → inherits 'this' from surrounding context
+
+Java comparison:
+- Similar to Java Lambda expressions:
+Function<String, String> greet = (name) -> "Hello " + name;
+System.out.println(greet.apply("Ajay"));
+
+- Key difference: 'this' behaves differently in JS arrow functions, unlike Java lambdas
+
+------------------------------------------------------------
+Key Points for Java Devs
+------------------------------------------------------------
+1. JS functions = Java methods, but can exist outside classes
+2. Declaration vs Expression → hoisting difference
+3. Arrow functions → short syntax, lexical 'this', like Java lambdas
+4. Functions are first-class citizens in JS → can be passed as arguments, returned from other functions
+5. Goal: Reuse code, encapsulate logic, handle callbacks or async operations in Node.js
+
+------------------------------------------------------------
+Summary
+------------------------------------------------------------
+- Function Declaration → normal JS method, hoisted
+- Function Expression → anonymous, stored in variable, not hoisted
+- Arrow Function → concise, lexical 'this', like Java lambda
+
+
+2.8 MAP (ARRAY TRANSFORMATION)
+------------------------------------------------------------
+- map() → Creates a new array by transforming each element.
+- Original array remains unchanged.
+
+Examples:
+const doubled = [1,2,3].map(n => n*2);
+// Result: [2,4,6]
+
+const names = people.map(p => p.name);
+// Result: ["bob","anna"]
+
 Transform objects:
-const newPeople=people.map(p=>({firstName:p.name.toUpperCase(), oldAge:p.age+20}));
+const newPeople = people.map(p => ({
+  firstName: p.name.toUpperCase(),
+  oldAge: p.age + 20
+}));
+// Result: [{firstName:"BOB", oldAge:40}, {firstName:"ANNA", oldAge:45}]
 
-2.9 Template Literals
+Goal: Efficiently transform array data for logs, responses, or HTML output.
+
 ------------------------------------------------------------
-let name="Ajay"; console.log(`Hello ${name}`);
+2.9 TEMPLATE LITERALS
+------------------------------------------------------------
+- Use backticks `` ` `` to include variables directly in strings.
+- Easier than concatenation.
+
+Example:
+let name = "Ajay";
+console.log(`Hello ${name}`);
+// Output: Hello Ajay
+
+Goal: Construct dynamic strings for messages, logs, or HTML insertion.
 
 ============================================================
 3. DOM & EVENTS (BROWSER SPECIFIC)
-============================================================
-Select: getElementById, querySelector, querySelectorAll
-Modify: innerText, innerHTML, value
-Change style: element.style.color='red'
-Create elements: createElement, appendChild
-Events: addEventListener('click'/'input'/'submit',callback)
+------------------------------------------------------------
+- Select elements:
+  document.getElementById("id")
+  document.querySelector(".class")
+  document.querySelectorAll("li")
+
+- Modify content:
+  element.innerText       // Text only
+  element.innerHTML       // Can include HTML tags
+  element.value           // For input fields
+
+- Change style:
+  element.style.color = 'red'
+
+- Create elements:
+  document.createElement("li")
+  parent.appendChild(newElement)
+
+- Events:
+  element.addEventListener("click"/"input"/"submit", callback)
+
+Goal: Make web pages interactive by selecting elements, modifying content/styles, creating elements, and handling user actions.
 
 ============================================================
-4. NODE.JS BASICS
-============================================================
-4.1 Modules
 ------------------------------------------------------------
-Export: module.exports={func1,var1};
-Import: const mod=require('./mod.js'); // CommonJS
-        import mod from './mod.js';      // ES6 Modules
+4. NODE.JS BASICS - MODULES (Beginner Explanation)
+------------------------------------------------------------
 
-4.2 Console & Debugging
-------------------------------------------------------------
-console.log(), console.error(), console.table()
+What is a Module?
+- A module is simply a separate file in Node.js that contains code (functions, variables, classes).
+- Think of it like a toolbox: each module holds tools you can use elsewhere.
+- Helps in organizing code, avoiding repetition, and making it reusable.
 
-4.3 File System (fs)
-------------------------------------------------------------
-const fs=require('fs');
-Sync: readFileSync, writeFileSync
-Async callbacks: readFile('file.txt','utf-8',(err,data)=>{})
-Async promises: fs.promises.readFile('file.txt','utf-8').then(...).catch(...)
+Why use Modules?
+- Keeps code clean and manageable.
+- Allows reusing the same code in multiple files.
+- Makes collaboration easier (different developers can work on different modules).
 
-4.4 Async & Promises
+Exporting from a Module:
+- When you want other files to use your code, you "export" it.
+- Syntax (CommonJS - default in Node.js):
+    module.exports = { func1, var1 };
+- This means "func1 and var1 are available for other files."
+
+Importing a Module:
+- When you want to use code from another file, you "import" it.
+- Syntax (CommonJS):
+    const mod = require('./mod.js');
+- Now you can use: mod.func1(), mod.var1
+
+- Syntax (ES6 Modules - optional):
+    import mod from './mod.js';
+- Requires Node.js support or `"type": "module"` in package.json
+
+Summary:
+- Module = a file with reusable code
+- Export = make code available to other files
+- Import = use code from another file
+- Keeps code organized and clean.
 ------------------------------------------------------------
-Callback: fs.readFile(...,(err,data)=>{})
-Promise: new Promise((resolve,reject)=>{}).then(...).catch(...)
-Async/Await:
+4.2 GLOBAL OBJECTS
+------------------------------------------------------------
+
+What are Global Objects?
+- Objects and functions available everywhere in Node.js without importing.
+- Think of them as "built-in tools" always ready to use.
+
+Common Global Objects:
+1. console
+   - Used to print messages to the terminal.
+   - Example: console.log("Hello Node.js");
+
+2. process
+   - Provides info about the current Node.js process.
+   - Example: console.log(process.version); // Node.js version
+
+3. __dirname & __filename
+   - __dirname = full path of current folder
+   - __filename = full path of current file
+   - Example: console.log(__dirname, __filename);
+
+4. setTimeout / setInterval
+   - Schedule functions to run after some time or repeatedly.
+   - Example:
+       setTimeout(() => console.log("Hi after 2 sec"), 2000);
+       setInterval(() => console.log("Every 1 sec"), 1000);
+
+Why Important?
+- Helps in debugging (console)
+- Accessing environment info (process)
+- Timing tasks (setTimeout/setInterval)
+- Managing file paths (__dirname/__filename)
+
+Summary:
+- Global objects = built-in tools accessible anywhere
+- No need to import
+- Useful for logging, timing, file paths, and process info
+
+
+------------------------------------------------------------
+4.2a CONSOLE & DEBUGGING
+- console.log()       → Output to terminal
+- console.error()     → Print errors
+- console.table()     → Print arrays/objects in table format
+
+Goal: Debug scripts and inspect data during Node.js execution.
+
+------------------------------------------------------------
+4.3 NPM & PACKAGES
+------------------------------------------------------------
+
+What is NPM?
+- NPM = Node Package Manager
+- It is a tool to install and manage third-party libraries (packages) for Node.js.
+- Think of it as an app store for Node.js code.
+
+Why use Packages?
+- Avoid rewriting common code (like HTTP servers, file handling, etc.)
+- Reuse tested and maintained code from the community.
+- Save time and make development easier.
+
+Common Commands:
+1. Initialize a project:
+   npm init
+   - Creates package.json (project info + dependencies)
+
+2. Install a package:
+   npm install package-name
+   - Adds the package to node_modules folder
+   - Updates package.json automatically
+
+3. Install a package globally:
+   npm install -g package-name
+   - Makes the package available in all projects
+
+4. Remove a package:
+   npm uninstall package-name
+
+5. Update packages:
+   npm update
+
+Using Packages:
+- After installing, import them in your code:
+   const pkg = require('package-name');   // CommonJS
+   import pkg from 'package-name';        // ES6 Modules
+
+Example:
+- Install lodash (utility library):
+   npm install lodash
+- Use in code:
+   const _ = require('lodash');
+   console.log(_.isEmpty({})); // true
+
+Summary:
+- NPM = tool to manage Node.js packages
+- Packages = reusable code from community
+- Saves time, adds functionality, keeps projects organized
+
+
+------------------------------------------------------------
+------------------------------------------------------------
+4.4 FILE SYSTEM (fs MODULE)
+------------------------------------------------------------
+
+What is fs Module?
+- 'fs' stands for File System.
+- Built-in Node.js module to work with files and folders.
+- Allows reading, writing, updating, and deleting files.
+
+Why use fs?
+- Node.js apps often need to handle data stored in files.
+- fs module provides easy methods to manage files programmatically.
+
+Import fs Module:
+- const fs = require('fs');
+
+Common Methods:
+
+1. Reading Files
+- Synchronous (blocking):
+    const data = fs.readFileSync('file.txt', 'utf8');
+    console.log(data);
+- Asynchronous (non-blocking, preferred):
+    fs.readFile('file.txt', 'utf8', (err, data) => {
+        if(err) throw err;
+        console.log(data);
+    });
+
+2. Writing Files
+- fs.writeFileSync('file.txt', 'Hello World');   // sync
+- fs.writeFile('file.txt', 'Hello World', (err) => { if(err) throw err; });
+
+3. Appending Data
+- fs.appendFileSync('file.txt', 'More text');   // sync
+- fs.appendFile('file.txt', 'More text', callback);
+
+4. Deleting Files
+- fs.unlinkSync('file.txt');   // sync
+- fs.unlink('file.txt', callback);
+
+Tips:
+- Prefer asynchronous methods to avoid blocking code.
+- Always handle errors in callbacks to prevent crashes.
+- Useful for logs, data storage, config files, and small databases.
+
+Summary:
+- fs = Node.js built-in module to manage files/folders
+- Can read, write, append, delete files
+- Provides sync and async methods
+- Core tool for file-based operations in Node.js
+
+------------------------------------------------------------
+4.5 HTTP MODULE (CREATING A SERVER)
+------------------------------------------------------------
+
+What is HTTP Module?
+- Built-in Node.js module to create web servers.
+- Lets your Node.js app respond to browser or client requests.
+- Core part of backend development.
+
+Import HTTP Module:
+- const http = require('http');
+
+Creating a Simple Server:
+
+const server = http.createServer((req, res) => {
+    // req = incoming request
+    // res = response to send back
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('Hello Node.js!');
+});
+
+server.listen(3000, () => {
+    console.log('Server running at http://localhost:3000/');
+});
+
+Explanation:
+1. http.createServer(callback)
+   - callback runs for every request
+   - req = request info (URL, method)
+   - res = response object to send data
+
+2. res.writeHead(statusCode, headers)
+   - Sets HTTP status and response headers
+
+3. res.end(data)
+   - Sends response and ends connection
+
+4. server.listen(port, callback)
+   - Starts server on given port
+   - Callback runs when server is ready
+
+Why Important?
+- Basic backend logic: handling requests & sending responses
+- Foundation for APIs and web apps
+- Can later integrate with Express.js for easier routing
+
+Summary:
+- HTTP module = create servers in Node.js
+- Handles requests (req) and responses (res)
+- Simple server = respond with text or data
+- Key starting point for Node.js web development
+------------------------------------------------------------
+4.6 EVENTS MODULE
+------------------------------------------------------------
+
+What is Events Module?
+- Node.js is event-driven: actions trigger events (like clicks or data received).
+- 'events' module allows you to create and handle custom events.
+- Useful for asynchronous programming.
+
+Import Events Module:
+- const EventEmitter = require('events');
+
+Creating and Using Events:
+
+const EventEmitter = require('events');
+const emitter = new EventEmitter();
+
+// 1. Register an event listener
+emitter.on('greet', () => {
+    console.log('Hello! Event triggered.');
+});
+
+// 2. Trigger the event
+emitter.emit('greet');
+
+Explanation:
+1. EventEmitter class:
+   - Allows creation of objects that can emit and listen to events.
+
+2. emitter.on(eventName, callback)
+   - Listens for the specified event
+   - Runs callback when event occurs
+
+3. emitter.emit(eventName)
+   - Triggers the event, calling all registered listeners
+
+Why Important?
+- Core of Node.js async programming
+- Used in many built-in modules (like HTTP, Streams, fs)
+- Helps decouple code: different parts can react to events without tight connections
+
+Summary:
+- Events module = handle custom events
+- on() = listen, emit() = trigger
+- Supports async, modular, and reactive code
+- Foundation for real-time apps and backend logic
+
+
+------------------------------------------------------------
+
+4.4 ASYNC & PROMISES
+- Callback: Traditional async handling
+  fs.readFile(..., (err,data) => { ... })
+
+- Promise: Cleaner syntax
+  const promise = new Promise((resolve,reject) => { ... })
+  promise.then(msg => console.log(msg)).catch(err => console.error(err))
+
+- Async/Await: Modern syntax for readable async code
 async function readFileAsync(){
- try{let data=await fs.promises.readFile('file.txt','utf-8'); console.log(data);}
- catch(err){console.error(err);}
+  try{
+    let data = await fs.promises.readFile('file.txt','utf-8');
+    console.log(data);
+  } catch(err){
+    console.error(err);
+  }
 }
+
+Goal: Handle asynchronous operations like file I/O, API calls, or database queries efficiently.
 
 ============================================================
 5. COMMENTS
 ------------------------------------------------------------
-JS: // single line, /* multi-line */
-HTML: <!-- comment -->
+- JavaScript:
+  // Single line
+  /* Multi-line */
+
+- HTML:
+  <!-- Comment -->
+
+Goal: Document code clearly for readability and maintenance.
 
 ============================================================
 SUMMARY – FULL-STACK READY
@@ -231,6 +858,6 @@ SUMMARY – FULL-STACK READY
 - Core JS: variables, loops, conditionals, functions, arrays, objects, map(), template literals
 - Browser only: DOM manipulation, events
 - Node only: modules, console, fs, async/promises
-- HTML knowledge for JS interactions
-- Ready to start Node.js backend development
-============================================================
+- HTML knowledge: Understand tags and attributes for JS interactions
+- Ready to start Node.js backend development or full-stack projects
+

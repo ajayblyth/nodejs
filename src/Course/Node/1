@@ -1,0 +1,517 @@
+================================================================================
+INDEX
+================================================================================
+1. Creating a Node Project
+2. Globals in Node.js
+3. Modules in Node.js
+4. Splitting Code into Modules
+5. Node Modules: Basic Setup & Execution
+6. Using Built-in Modules
+7. OS Module
+8. Path Module
+9. File System (FS) Module
+10. Synchronous vs Asynchronous
+11. HTTP Module: Basic Server Setup
+12. Node Package Manager (NPM)
+13. Key Takeaways
+================================================================================
+
+1. CREATING A NODE PROJECT
+--------------------------------------------------------------------------------
+- Create folder "tutorial" → open in VS Code.
+- Create file "app.js". Node runs JS outside browser.
+
+Example:
+    const amount = 12;
+
+    if (amount < 10) {
+        console.log("small number");
+    } else {
+        console.log("large number");
+    }
+
+    console.log(`hey, it's my first node app`);
+
+Run in terminal:
+    > node app.js
+
+- From any directory use full path:
+    > node /Users/username/Desktop/tutorial/app.js
+
+- In VS Code integrated terminal (Ctrl + ~):
+    > node app.js
+
+================================================================================
+2. GLOBALS IN NODE.JS
+--------------------------------------------------------------------------------
+- Node has its own globals (unlike browsers "window"):
+
+Common Globals:
+- __dirname   → path to current directory
+- __filename  → path to current file
+- require     → import modules
+- module      → info about current module
+- process     → info about environment (OS, runtime, env vars)
+- console     → available globally
+- setInterval, setTimeout → timers available globally
+
+Example:
+    console.log(__dirname);
+    console.log(__filename);
+
+    setInterval(() => {
+        console.log("hello world");
+    }, 1000);
+
+Stop interval: Ctrl + C in terminal
+
+================================================================================
+3. MODULES IN NODE.JS
+--------------------------------------------------------------------------------
+- Each file is a module by default
+- Use module.exports to share code
+- Use require('./path') to import
+
+Example (without modules):
+    const john = "john";
+    const peter = "peter";
+
+    function sayHi(name) {
+        console.log(`Hello there ${name}`);
+    }
+
+    sayHi("Susan");
+    sayHi(john);
+    sayHi(peter)
+
+================================================================================
+4. SPLITTING CODE INTO MODULES
+--------------------------------------------------------------------------------
+Step 1: names.js
+    const secret = "SUPER SECRET"; // local
+    const john = "john";
+    const peter = "peter";
+    module.exports = { john, peter };
+
+Step 2: utils.js
+    const sayHi = (name) => {
+        console.log(`Hello there ${name}`);
+    };
+    module.exports = sayHi;
+
+Step 3: app.js
+    const names = require('./names');
+    const sayHi = require('./utils');
+
+    sayHi("Susan");
+    sayHi(names.john);
+    sayHi(names.peter);
+
+Run:
+    > node app.js
+
+Output:
+    Hello there Susan
+    Hello there john
+    Hello there peter
+
+================================================================================
+5. NODE MODULES: BASIC SETUP & EXECUTION
+--------------------------------------------------------------------------------
+- Create file: mind-grenade.js
+Example:
+    const num1 = 5;
+    const num2 = 10;
+    function addValues() {
+        console.log(`The sum is: ${num1 + num2}`);
+    }
+    addValues();
+
+- App.js usage:
+    require('./mind-grenade');  // code executes immediately
+
+Notes:
+1. Works with both CommonJS and ES6 modules
+2. Modules can execute code immediately
+3. Node wraps module code in a function internally
+
+================================================================================
+6. USING BUILT-IN MODULES
+--------------------------------------------------------------------------------
+- Built-in modules: OS, Path, FS, HTTP, etc.
+- Import syntax:
+      const moduleName = require('module-name');  // No './' for built-ins
+- Docs: https://nodejs.org/en/docs/
+
+================================================================================
+7. OS MODULE
+--------------------------------------------------------------------------------
+- Purpose: Info about OS and server
+- Setup:
+      const os = require('os');
+
+Example:
+    const user = os.userInfo();
+    console.log(user);
+
+    console.log(`System uptime: ${os.uptime()} seconds`);
+
+    const currentOS = {
+        name: os.type(),
+        release: os.release(),
+        totalMem: os.totalmem(),
+        freeMem: os.freemem()
+    };
+    console.log(currentOS);
+
+Notes:
+- Provides user info, uptime, memory, OS type/release
+
+================================================================================
+8. PATH MODULE
+--------------------------------------------------------------------------------
+- Purpose: Work with file paths across platforms
+- Setup:
+      const path = require('path');
+
+Useful methods:
+1. path.sep → platform-specific separator
+2. path.join(...) → joins segments, normalizes path
+3. path.basename(filePath) → returns last portion (filename)
+4. path.resolve(...) → returns absolute path
+
+Example:
+    const filePath = path.join('content', 'subfolder', 'test.txt');
+    console.log(filePath);
+    console.log(path.basename(filePath));
+    console.log(path.resolve(__dirname, 'content', 'subfolder', 'test.txt'));
+
+================================================================================
+9. FILE SYSTEM MODULE (FS)
+--------------------------------------------------------------------------------
+- Purpose: Interact with files (read/write/append)
+- Setup:
+      const fs = require('fs');
+
+--------------------------------------------------------------------------------
+9a. Synchronous (Blocking)
+Example:
+    const first = fs.readFileSync('./content/first.txt', 'utf8');
+    const second = fs.readFileSync('./content/second.txt', 'utf8');
+
+    fs.writeFileSync('./content/result-sync.txt',
+        `Here is the result: ${first}, ${second}`);
+
+- Append: fs.writeFileSync('file.txt', data, { flag: 'a' })
+
+--------------------------------------------------------------------------------
+9b. Asynchronous (Non-Blocking)
+Example:
+    fs.readFile('./content/first.txt', 'utf8', (err, result) => {
+        if(err) return console.log(err);
+        const first = result;
+
+        fs.readFile('./content/second.txt', 'utf8', (err, result) => {
+            if(err) return console.log(err);
+            const second = result;
+
+            fs.writeFile('./content/result-async.txt',
+                `Here is the result: ${first}, ${second}`,
+                (err) => {
+                    if(err) return console.log(err);
+                    console.log('File written successfully');
+                });
+        });
+    });
+
+Notes:
+- Async prevents blocking, handles multiple users
+- Nested callbacks → "Callback Hell"
+- Use Promises/async-await for readability
+
+================================================================================
+10. SYNCHRONOUS VS ASYNCHRONOUS
+--------------------------------------------------------------------------------
+- Blocking (Sync): Node waits for task to finish
+- Non-blocking (Async): Node offloads task, continues execution
+
+Example:
+    console.log('Start');
+    fs.writeFileSync(...);
+    console.log('Done with task');
+    console.log('Next task');
+
+    console.log('Start');
+    fs.writeFile(..., callback);
+    console.log('Next task');
+
+- Async recommended for I/O-heavy operations
+
+================================================================================
+11. HTTP MODULE: BASIC SERVER SETUP
+--------------------------------------------------------------------------------
+- Purpose: Web server + handle HTTP requests/responses
+- Built-in module: http
+- Minimal coverage now; details later
+
+Setup:
+    const http = require('http');
+    const server = http.createServer((req, res) => {
+        res.write('Welcome to our homepage');
+        res.end();
+    });
+
+    server.listen(5000);
+
+Notes:
+1. req → request object
+2. res → response object
+3. Server stays active
+4. Run: node app.js
+5. Visit: http://localhost:5000
+
+--------------------------------------------------------------------------------
+11a. Routing Example
+    const server = http.createServer((req, res) => {
+        if(req.url === '/') {
+            res.end('Welcome to our homepage');
+            return;
+        }
+        if(req.url === '/about') {
+            res.end('Here is our short history');
+            return;
+        }
+        res.end(`<p>We can't seem to find the page you're looking for.</p>
+                 <a href="/">Go back home</a>`);
+    });
+
+Notes:
+- Must send only one response per request
+- Fix multiple responses:
+    1. Add return after res.end()
+    2. Or use if-else if-else structure
+
+================================================================================
+12. NODE PACKAGE MANAGER (NPM)
+--------------------------------------------------------------------------------
+- Installed with Node.js
+- Enables:
+    1. Reuse own code
+    2. Use code by others
+    3. Share own solutions
+- Website: https://www.npmjs.com
+
+Concepts:
+- Package / Module / Dependency = shareable JS code
+- No quality control: check weekly downloads for reliability
+
+Installing Packages:
+- Check NPM version:
+      npm --version  // or npm -v
+
+- Local dependency:
+      npm install <package-name>  // or npm i <package-name>
+
+- Global dependency:
+      npm install -g <package-name>
+      // macOS may require: sudo npm install -g <package-name>
+
+- Recommended: Local dependencies; use NPX for running packages without global install
+
+Example Packages:
+- Bootstrap, Lodash, Express
+- Install locally: npm install express
+- Install globally: npm install -g create-react-app
+
+Notes:
+1. Local → node_modules folder in project
+2. Global → system-wide directory
+3. NPX reduces need for global install
+
+================================================================================
+13. KEY TAKEAWAYS
+--------------------------------------------------------------------------------
+1. Each file is a Node module; only exported values accessible
+2. __dirname, __filename, process, console are common globals
+3. Modules execute code immediately if invoked
+4. Built-in modules are powerful: os, path, fs, http
+5. FS module:
+    - Sync blocks execution
+    - Async prevents blocking
+    - Use async/await to avoid callback hell
+6. HTTP Module:
+    - req.url used for routing
+    - Must return after sending response or use if-else
+7. NPM:
+    - Install local/global packages
+    - Popularity indicates reliability
+    - NPX reduces need for global install
+8. Non-blocking async is essential for scalable Node servers
+
+================================================================================
+================================================================================
+14. NPM & PACKAGE.JSON
+================================================================================
+- Purpose: Manage project dependencies and metadata.
+- npm comes with Node.js by default.
+
+--------------------------------------------------------------------------------
+14a. Creating package.json
+--------------------------------------------------------------------------------
+- package.json is a manifest file storing important project info.
+- Three ways to create it:
+  1. Manual: create file in project root, add properties manually (time-consuming)
+  2. Step-by-step: `npm init` → prompts questions
+  3. Default setup: `npm init -y` → generates default file automatically
+- Properties include: name, version, description, main, scripts, author, license, dependencies
+
+--------------------------------------------------------------------------------
+14b. Installing Local Packages
+--------------------------------------------------------------------------------
+- Syntax: `npm i <package-name>` (or `npm install <package-name>`)
+- Example: `npm i lodash`
+- Dependencies are added in `package.json` under `"dependencies"`
+- Node creates `node_modules` folder to store installed packages
+- Some packages have their own dependencies; npm installs them automatically
+- Example: Installing Bootstrap also installs jQuery and Popper.js
+
+--------------------------------------------------------------------------------
+14c. Using Installed Packages
+--------------------------------------------------------------------------------
+- Assign the package to a variable using `require`:
+      const _ = require('lodash');
+- Example usage:
+      const items = [[1, 2], [3, 4]];
+      const newItems = _.flattenDeep(items);
+      console.log(newItems);  // Output: [1, 2, 3, 4]
+- Note: External packages must be installed before use
+- Node built-in modules (fs, http, path, etc.) don’t need installation
+
+--------------------------------------------------------------------------------
+15. Key Takeaways
+--------------------------------------------------------------------------------
+1. `package.json` stores metadata and project dependencies.
+2. `npm init` creates package.json (step-by-step or default `-y` flag)
+3. `npm i <package>` installs local packages
+4. Dependencies appear in `node_modules` and in package.json
+5. Some packages install additional dependencies automatically
+6. Use `require('<package>')` to access installed packages in code
+7. Having package.json is crucial for sharing projects with others
+
+
+================================================================================
+16. SHARING PROJECTS & PACKAGE.JSON IMPORTANCE
+================================================================================
+- Purpose: Understand why package.json is crucial when sharing projects
+
+--------------------------------------------------------------------------------
+16a. Avoid Pushing node_modules
+--------------------------------------------------------------------------------
+- node_modules can be very large (10MB+)
+- Use `.gitignore` to exclude `node_modules` from GitHub
+- Only share code + package.json
+- Git ignores files listed in `.gitignore`
+
+--------------------------------------------------------------------------------
+16b. Cloning & Installing Dependencies
+--------------------------------------------------------------------------------
+- Workflow:
+  1. Clone repo from GitHub
+  2. Run `npm install`
+- npm reads dependencies in package.json
+- Automatically installs required node_modules
+- Ensures collaborators have correct dependencies without pushing huge folders
+- Common in React projects and Node apps
+
+--------------------------------------------------------------------------------
+16c. Dev Dependencies
+--------------------------------------------------------------------------------
+- Command: `npm i nodemon -D`  (or `--save-dev`)
+- Purpose:
+  - Packages used only during development (not production)
+  - Examples: nodemon, testing libraries, linters, formatters
+- Production uses only runtime dependencies
+- DevDependencies stored separately in package.json
+
+--------------------------------------------------------------------------------
+16d. Scripts in package.json
+--------------------------------------------------------------------------------
+- Scripts object allows custom commands
+- Example:
+      "scripts": {
+          "start": "node app.js",
+          "dev": "nodemon app.js"
+      }
+- Run commands:
+  - `npm start` → runs `start` script
+  - `npm run dev` → runs `dev` script
+- nodemon automatically restarts app on file changes
+
+--------------------------------------------------------------------------------
+16e. Uninstalling Packages
+--------------------------------------------------------------------------------
+- Command: `npm uninstall <package-name>`
+- Removes package from node_modules and updates package.json
+- Nuclear approach:
+  1. Delete node_modules
+  2. Delete package-lock.json
+  3. Run `npm install` to reinstall dependencies from scratch
+- Useful when dependencies become inconsistent or corrupted
+- Example: removing Bootstrap after installation
+
+--------------------------------------------------------------------------------
+17. Key Takeaways
+--------------------------------------------------------------------------------
+1. `.gitignore` prevents pushing node_modules to GitHub
+2. package.json + npm install ensures collaborators can run your project
+3. DevDependencies are for development-only tools
+4. Scripts in package.json simplify running commands
+5. npm uninstall and nuclear approach help manage/remove packages safely
+
+================================================================================
+18. GLOBAL PACKAGE INSTALLATION & NPX
+================================================================================
+- Command for global install: `npm install -g <packageName>`
+- Mac users may need `sudo` for permissions
+- Global packages can be used in any project
+- Example: nodemon installed globally → can run `nodemon app.js` anywhere
+
+--------------------------------------------------------------------------------
+18a. Use Cases for Global Packages
+--------------------------------------------------------------------------------
+- Useful for CLI tools (e.g., Gatsby CLI, Create React App)
+- Typically frameworks or tools used across multiple projects
+- NPX reduces need for global installs
+    - Example: `npx create-react-app my-app`
+- Personal preference: avoid global packages to reduce student setup issues
+- Recommended: use NPX or local dependency instead of global
+
+--------------------------------------------------------------------------------
+18b. NPX (Node Package Runner)
+--------------------------------------------------------------------------------
+- Introduced in NPM 5.2+
+- Allows executing CLI tools without installing globally
+- Example:
+    - `npx create-react-app <project-name>`
+    - Runs the tool directly from NPM registry
+
+--------------------------------------------------------------------------------
+19. PACKAGE-LOCK.JSON
+--------------------------------------------------------------------------------
+- Purpose: lock exact versions of dependencies & sub-dependencies
+- Ensures everyone using your project has identical setup
+- Prevents breaking changes due to updated versions of dependencies
+- Three version components:
+    1. **Major** → breaking changes
+    2. **Minor** → backward compatible changes
+    3. **Patch** → bug fixes only
+- Acts as a contract between package authors and users
+- Important when publishing your own packages
+
+--------------------------------------------------------------------------------
+20. ADDITIONAL RESOURCES
+--------------------------------------------------------------------------------
+- Official guide: "The Basics of Package.json"
+- Covers all fields: name, version, description, scripts, dependencies, etc.
+
+

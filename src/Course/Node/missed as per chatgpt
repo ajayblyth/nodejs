@@ -1,0 +1,116 @@
+================================================================================
+IMPORTANT MISSING NODE.JS TOPICS (COMMON & MODERN)
+================================================================================
+
+1. ENVIRONMENT VARIABLES
+--------------------------------------------------------------------------------
+- Access via process.env
+  Example:
+      console.log(process.env.NODE_ENV);
+      process.env.PORT = 5000;
+
+- Use `.env` files with `dotenv` package:
+      npm install dotenv
+      require('dotenv').config();
+      console.log(process.env.MY_VAR);
+
+- Purpose:
+  * Store secrets (API keys, passwords)
+  * Configure ports, modes (dev/prod)
+  * Avoid hardcoding values
+
+================================================================================
+2. MODULE CACHING & EXPORTS
+--------------------------------------------------------------------------------
+- Modules are cached on first require.
+- CommonJS vs ES6:
+  * CommonJS: module.exports / require()
+  * ES6: export / import
+- Circular dependencies → may cause undefined exports if not careful
+
+================================================================================
+3. ASYNC PATTERNS & EVENT LOOP ADVANCED
+--------------------------------------------------------------------------------
+- setImmediate vs setTimeout:
+  * setTimeout(fn,0) → executes after poll phase
+  * setImmediate(fn) → executes immediately after I/O callbacks
+- Microtasks vs Macrotasks:
+  * Microtasks: Promises, process.nextTick()
+  * Macrotasks: setTimeout, setInterval, I/O callbacks
+- Example Execution Order:
+      console.log('Start');
+      setTimeout(() => console.log('Timeout'), 0);
+      Promise.resolve().then(() => console.log('Promise'));
+      console.log('End');
+  Output: Start → End → Promise → Timeout
+
+================================================================================
+4. PROCESS & OS ADVANCED USAGE
+--------------------------------------------------------------------------------
+- process.argv → read CLI arguments
+- process.exit([code]) → terminate program
+- process.memoryUsage() → monitor memory
+- os.networkInterfaces(), os.cpus() → system info
+
+================================================================================
+5. STREAMS (ESSENTIAL)
+--------------------------------------------------------------------------------
+- Backpressure: prevents memory overflow
+- Transform Streams:
+      const { Transform } = require('stream');
+      const upperCase = new Transform({
+        transform(chunk, encoding, callback) {
+            this.push(chunk.toString().toUpperCase());
+            callback();
+        }
+      });
+
+- Pipe multiple streams: Readable → Transform → Writable
+- Compression example:
+      const zlib = require('zlib');
+      fs.createReadStream('big.txt')
+        .pipe(zlib.createGzip())
+        .pipe(fs.createWriteStream('big.txt.gz'));
+
+- Always handle 'error' events:
+      readable.on('error', err => console.error(err));
+
+================================================================================
+6. NPM & PACKAGE MANAGEMENT
+--------------------------------------------------------------------------------
+- npm scripts:
+  * start, test, build, pre/post hooks
+- Semantic Versioning:
+  * ^1.2.3 → minor updates
+  * ~1.2.3 → patch updates
+  * 1.2.3 → exact version
+- DevDependencies vs Dependencies
+- npx → run CLI tools without global install
+- package-lock.json → locks exact dependency versions
+
+================================================================================
+7. ERROR HANDLING BEST PRACTICES
+--------------------------------------------------------------------------------
+- fs callbacks → check err
+- Promises → .catch() or try/catch with async/await
+- EventEmitter → always handle 'error'
+- Streams → handle 'error' events
+
+================================================================================
+8. DEBUGGING & INSPECTION
+--------------------------------------------------------------------------------
+- node inspect app.js → CLI debugger
+- VS Code debugging → breakpoints, launch configs
+- console.time / console.timeEnd → measure performance
+- process.on('uncaughtException', fn) → catch unhandled errors
+
+================================================================================
+9. OTHER CORE MODULES (COMMONLY USED)
+--------------------------------------------------------------------------------
+- path → path.parse(), path.isAbsolute(), path.dirname()
+- fs → fs.promises API (modern async/await)
+- util → util.promisify, util.inherits
+- crypto → hashing, encryption
+- events → once(), multiple listeners
+
+================================================================================

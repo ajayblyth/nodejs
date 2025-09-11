@@ -1,0 +1,397 @@
+============================================================
+JAVASCRIPT ASYNC BASICS (CALLBACKS → PROMISES → ASYNC/AWAIT)
+============================================================
+
+1. WHY ASYNC IN JS?
+------------------------------------------------------------
+- JavaScript is SINGLE-THREADED (one task at a time).
+- But real-world apps need to do things like:
+  • Fetch data from server
+  • Read files
+  • Wait for user input
+- These take TIME → We cannot BLOCK the entire program.
+- So, JS uses ASYNCHRONOUS programming.
+
+------------------------------------------------------------
+2. CALLBACKS
+------------------------------------------------------------
+
+1. DEFINITION
+------------------------------------------------------------
+- A "callback" is a function passed into another
+  function as an argument.
+- It is "called back" after the main function finishes
+  its job.
+- Used to control what happens AFTER something else.
+
+------------------------------------------------------------
+2. BASIC EXAMPLE
+------------------------------------------------------------
+function greetUser(name, callback) {
+    console.log("Hello " + name);
+    callback();   // call the function that was passed in
+}
+
+function sayBye() {
+    console.log("Goodbye!");
+}
+
+greetUser("Ajay", sayBye);
+
+OUTPUT:
+Hello Ajay
+Goodbye!
+
+------------------------------------------------------------
+3. WHY USE CALLBACKS?
+------------------------------------------------------------
+- To make functions reusable.
+- Instead of fixing what happens after greeting,
+  we let the user decide.
+- Example:
+   greetUser("Ajay", sayBye);     // Hello Ajay, Goodbye!
+   greetUser("Ajay", () => console.log("Thanks!"));
+   // Hello Ajay, Thanks!
+
+- In real-world apps:
+   • When you load data from a file → callback runs
+     when data is ready.
+   • When you click a button → callback runs on click.
+
+------------------------------------------------------------
+4. SYNCHRONOUS VS ASYNCHRONOUS CALLBACKS
+------------------------------------------------------------
+(a) Synchronous callback
+- Runs immediately after the main function.
+- Example:
+   [Above greetUser + sayBye example]
+
+(b) Asynchronous callback
+- Runs LATER when something finishes (like waiting for data).
+- Example (using setTimeout):
+
+   console.log("Start");
+   setTimeout(() => {
+       console.log("Done after 2 sec");
+   }, 2000);
+   console.log("End");
+
+   OUTPUT:
+   Start
+   End
+   Done after 2 sec
+
+
+   ------------------------------------------
+   ============================================================
+   SETTIMEOUT IN JAVASCRIPT
+   ============================================================
+
+   1. CODE EXAMPLE
+   ------------------------------------------------------------
+   console.log("Start");
+
+   setTimeout(() => {
+       console.log("Done after 2 sec");
+   }, 2000);
+
+   console.log("End");
+
+   ------------------------------------------------------------
+   Output:
+   Start
+   End
+   Done after 2 sec
+
+   ============================================================
+
+   2. WHAT IS setTimeout?
+   ------------------------------------------------------------
+   - Built-in JS function.
+   - Syntax: setTimeout(function, delayInMilliseconds);
+   - Runs given function AFTER the specified delay.
+   - Does NOT block the program.
+
+   Example:
+   setTimeout(() => {
+       console.log("Hello after 1 sec");
+   }, 1000);
+
+   ============================================================
+
+   3. WHY ORDER IS Start → End → Done?
+   ------------------------------------------------------------
+   - JS executes code line by line.
+   - setTimeout schedules task for later (after delay).
+   - Meanwhile, JS continues running next lines.
+   - After delay, the callback function is executed.
+
+   ============================================================
+
+   4. EVENT LOOP (Simplified)
+   ------------------------------------------------------------
+   - JS is single-threaded (one task at a time).
+   - setTimeout tells browser: "Remind me after delay."
+   - Browser puts callback in a queue after timer ends.
+   - Event Loop runs callback when main thread is free.
+
+   ============================================================
+   SUMMARY
+   ------------------------------------------------------------
+   - setTimeout = schedule code to run later.
+   - Does not pause code, just delays callback.
+   - Commonly used for delays, animations, retries.
+   ============================================================
+-------------------------------------------------------------------------------------
+
+============================================================
+ARROW FUNCTIONS ( => ) IN JAVASCRIPT
+============================================================
+
+1. WHAT IS IT?
+------------------------------------------------------------
+- A shorter way to write functions.
+- Introduced in ES6 (modern JS).
+- Syntax: (parameters) => { body }
+
+============================================================
+
+2. BASIC EXAMPLES
+------------------------------------------------------------
+Normal function:
+function greet(name) {
+    return "Hello " + name;
+}
+
+Arrow function (shorter):
+const greet = (name) => {
+    return "Hello " + name;
+};
+
+Even shorter (1 line return):
+const greet = name => "Hello " + name;
+
+============================================================
+
+3. SYNTAX RULES
+------------------------------------------------------------
+- () → parameters go here.
+- => → arrow means "function".
+- {} → function body (can omit if single return).
+
+Examples:
+() => console.log("Hi");       // no parameters
+x => x * 2;                    // one parameter
+(a, b) => a + b;               // multiple parameters
+
+============================================================
+
+4. DIFFERENCE FROM NORMAL FUNCTION
+------------------------------------------------------------
+- Arrow functions do NOT have their own 'this'.
+- Useful for callbacks, promises, setTimeout, etc.
+- More concise, especially for inline functions.
+
+Example with setTimeout:
+setTimeout(() => {
+    console.log("Done!");
+}, 1000);
+
+============================================================
+SUMMARY
+------------------------------------------------------------
+- () => {} is just a shorter function syntax.
+- Best for quick, inline, or callback functions.
+- Still can use 'function' keyword if preferred.
+============================================================
+
+
+------------------------------------------------------------
+5. PROBLEM WITH CALLBACKS (Callback Hell)
+------------------------------------------------------------
+- When many async tasks depend on each other,
+  callbacks get nested:
+   task1(() => {
+      task2(() => {
+         task3(() => {
+            console.log("Done!");
+         });
+      });
+   });
+
+- This "pyramid" of nested functions = callback hell.
+- Hard to read, debug, and maintain.
+
+------------------------------------------------------------
+6. DO WE STILL USE CALLBACKS?
+------------------------------------------------------------
+- YES:
+   • Event listeners (button click, mouse move, etc.)
+   • Simple one-time custom functions
+   • Some older libraries
+
+- NO (not recommended for async tasks):
+   • For async code → we now prefer Promises or async/await
+   • They avoid callback hell and make code cleaner
+
+------------------------------------------------------------
+7. KEY TAKEAWAY
+------------------------------------------------------------
+- Callbacks = functions passed into other functions.
+- Useful, but can become messy with many async steps.
+- Promises + async/await are modern replacements
+  for managing async tasks cleanly.
+
+
+------------------------------------------------------------
+3. PROMISES
+------------------------------------------------------------
+
+1. CALLBACK HELL (Nested Callbacks Problem)
+------------------------------------------------------------
+Example: Suppose we want to:
+   1) Get user info
+   2) Then get posts of that user
+   3) Then get comments of a post
+
+Using callbacks:
+function getUser(callback) {
+    setTimeout(() => {
+        console.log("User fetched");
+        callback({ id: 1, name: "Ajay" });
+    }, 1000);
+}
+
+function getPosts(userId, callback) {
+    setTimeout(() => {
+        console.log("Posts fetched for user " + userId);
+        callback(["post1", "post2"]);
+    }, 1000);
+}
+
+function getComments(post, callback) {
+    setTimeout(() => {
+        console.log("Comments fetched for " + post);
+        callback(["comment1", "comment2"]);
+    }, 1000);
+}
+
+// NESTED CALLBACKS (Callback Hell)
+getUser((user) => {
+    getPosts(user.id, (posts) => {
+        getComments(posts[0], (comments) => {
+            console.log("Final Result:", comments);
+        });
+    });
+});
+
+PROBLEM:
+- Code becomes deeply nested (pyramid shape).
+- Hard to read and maintain.
+- Error handling becomes messy.
+
+------------------------------------------------------------
+2. THINGS TO KNOW BEFORE PROMISES
+------------------------------------------------------------
+- Promises solve callback hell by flattening the code.
+- Important keywords:
+   a) .then()
+      - Used to handle success result of a promise.
+      - Takes a function as argument.
+   b) .catch()
+      - Handles errors if promise is rejected.
+   c) .finally()
+      - Runs after success or error (cleanup).
+
+- Promise Flow:
+   pending → (resolve) → fulfilled
+   pending → (reject)  → rejected
+
+------------------------------------------------------------
+3. PROMISES (Replacing Callback Hell)
+------------------------------------------------------------
+Same Example with Promises:
+
+function getUser() {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            console.log("User fetched");
+            resolve({ id: 1, name: "Ajay" });
+        }, 1000);
+    });
+}
+
+function getPosts(userId) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            console.log("Posts fetched for user " + userId);
+            resolve(["post1", "post2"]);
+        }, 1000);
+    });
+}
+
+function getComments(post) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            console.log("Comments fetched for " + post);
+            resolve(["comment1", "comment2"]);
+        }, 1000);
+    });
+}
+
+// CHAINING PROMISES
+getUser()
+    .then(user => getPosts(user.id))
+    .then(posts => getComments(posts[0]))
+    .then(comments => console.log("Final Result:", comments))
+    .catch(error => console.log("Error:", error));
+
+BENEFITS:
+- No deep nesting.
+- Errors handled in ONE place with .catch().
+- Code looks like a sequence of steps.
+
+------------------------------------------------------------
+4. KEY TAKEAWAY
+------------------------------------------------------------
+- Callbacks = basic building block, but can create "callback hell".
+- Promises = cleaner way, avoid deep nesting, central error handling.
+- THEN chains steps in order.
+- CATCH handles failures.
+- FINALLY runs always.
+
+
+------------------------------------------------------------
+4. ASYNC / AWAIT
+------------------------------------------------------------
+Definition:
+- "async" makes a function return a Promise.
+- "await" pauses code until the Promise resolves.
+
+Example:
+async function fetchData() {
+    let promise = new Promise((resolve, reject) => {
+        setTimeout(() => resolve("Data loaded!"), 2000);
+    });
+
+    let result = await promise;   // wait for promise
+    console.log(result);
+}
+
+fetchData();
+
+Output:
+(Data printed after 2 seconds)
+"Data loaded!"
+
+Use:
+- async/await makes async code look like SYNC code.
+- Easiest and most readable modern approach.
+
+============================================================
+5. SUMMARY
+------------------------------------------------------------
+Callbacks → First async style (but messy)
+Promises → Cleaner, avoids callback hell
+Async/Await → Best modern way, makes code readable
+============================================================

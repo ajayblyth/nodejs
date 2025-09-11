@@ -1,0 +1,213 @@
+-------------------------------------------------------------
+NODE.JS: EVENT LOOP, ASYNC PATTERNS & EVENTS GUIDE
+-------------------------------------------------------------
+
+1. NPM & Nodemon
+----------------
+1.1 Nodemon:
+    - Watches files and restarts app automatically on changes.
+    - Saves time: avoid typing 'node app.js' repeatedly during development.
+    - Install: npm install -g nodemon
+    - Run: nodemon app.js
+
+2. Event Loop (General Concept)
+-------------------------------
+2.1 JavaScript is single-threaded:
+    - Only one task executes at a time.
+2.2 Event Loop allows non-blocking I/O:
+    - Heavy tasks (network, file I/O, timers) are offloaded.
+    - Immediate code runs first, callbacks run later.
+    - Prevents blocking other users or tasks.
+2.3 Browser vs Node:
+    - Browser async examples: fetch(), setTimeout()
+    - Node async examples: fs.readFile(), HTTP requests
+
+3. Event Loop Examples
+---------------------
+3.1 Async readFile Example:
+const fs = require('fs');
+
+console.log('Started Task 1');
+fs.readFile('first.txt', 'utf8', (err, data) => {
+    if(err) return console.log(err);
+    console.log(data);
+    console.log('Completed Task 1');
+});
+console.log('Starting Next Task');
+
+- Output order:
+  1. Started Task 1
+  2. Starting Next Task
+  3. (after readFile finishes) file content + Completed Task 1
+
+3.2 setTimeout Example (0ms delay):
+console.log('First');
+setTimeout(() => console.log('Second'), 0);
+console.log('Third');
+
+- Output: First, Third, Second
+
+3.3 setInterval:
+- Repeats a task every X milliseconds.
+Example:
+setInterval(() => console.log('Hello every 2s'), 2000);
+
+3.4 Server Example:
+const http = require('http');
+http.createServer((req, res) => {
+    res.end('Hello World');
+}).listen(3000);
+
+- Keeps process alive, handles incoming requests asynchronously.
+
+4. Synchronous vs Blocking Code
+-------------------------------
+- Heavy loops or calculations block Event Loop.
+- Example:
+for(let i=0; i<1e9; i++) {}  // blocks Node
+- Other callbacks wait until blocking code finishes.
+
+5. Asynchronous Patterns
+------------------------
+5.1 Callback Hell:
+- Nested callbacks become messy and hard to read.
+- Example: fs.readFile inside fs.readFile inside fs.readFile
+
+5.2 Solution: Promises + Async/Await
+- Cleaner, readable async code.
+
+5.3 Converting FS readFile to Promise:
+const getText = (path) => {
+    return new Promise((resolve, reject) => {
+        fs.readFile(path, 'utf8', (err, data) => {
+            if(err) reject(err);
+            else resolve(data);
+        });
+    });
+};
+
+// Usage
+getText('./content/first.txt')
+    .then(result => console.log(result))
+    .catch(err => console.log(err));
+
+5.4 Async/Await Example:
+const start = async () => {
+    try {
+        const first = await getText('./content/first.txt');
+        const second = await getText('./content/second.txt');
+        console.log(first, second);
+    } catch(err) {
+        console.log(err);
+    }
+};
+start();
+
+5.5 Node util.promisify
+- Converts callback functions to Promise-based functions.
+const { promisify } = require('util');
+const readFilePromise = promisify(fs.readFile);
+const writeFilePromise = promisify(fs.writeFile);
+
+// Usage
+const first = await readFilePromise('./first.txt', 'utf8');
+await writeFilePromise('./result.txt', `Combined: ${first} ...`);
+
+6. Node.js Events & Event-Driven Programming
+--------------------------------------------
+
+6.1 Introduction to Events
+- Events control program flow in browser and Node.js.
+- Examples:
+    * Click a button
+    * Hover over a link
+- Event-driven programming: program flow partially determined by events.
+- Node.js uses events internally in many modules (HTTP, FS, Streams).
+
+6.2 Creating Events in Node.js
+- Node has **Events Module**.
+Steps:
+a) Require Events module:
+    const EventEmitter = require('events');
+b) Create an instance:
+    const customEmitter = new EventEmitter();
+c) Two main methods:
+    - on() → listen for events
+    - emit() → trigger events
+
+6.3 Basic Event Example
+const EventEmitter = require('events');
+const customEmitter = new EventEmitter();
+
+// Listen for event
+customEmitter.on('response', () => {
+    console.log('data received');
+});
+
+// Emit event
+customEmitter.emit('response');
+
+// Output: data received
+
+6.4 Multiple Listeners
+customEmitter.on('response', () => {
+    console.log('some other logic here');
+});
+
+customEmitter.emit('response');
+
+// Notes:
+- Multiple callbacks per event allowed.
+- Order matters: listen first, then emit.
+
+6.5 Passing Arguments
+customEmitter.on('response', (name, id) => {
+    console.log(`data received user ${name} with ID ${id}`);
+});
+
+customEmitter.emit('response', 'John', 34);
+
+// Output: data received user John with ID 34
+- Listeners without parameters ignore extra arguments.
+
+6.6 HTTP Server Using Events
+const http = require('http');
+const server = http.createServer();
+
+// Listen for request event
+server.on('request', (req, res) => {
+    res.end('Hello World');
+});
+
+server.listen(3000);
+
+// Notes:
+- server instance is an EventEmitter.
+- request event emitted automatically on each incoming request.
+- on() subscribes to that event.
+
+6.7 Checking Events in Documentation
+- Node.js Docs → HTTP → Server class → Events listed (request, close, etc.)
+- Server extends net.Server → extends EventEmitter
+- Many built-in modules use events internally.
+
+6.8 Key Event Concepts
+- EventEmitter is core class.
+- on() → subscribe
+- emit() → trigger
+- Multiple listeners allowed
+- Listen before emitting
+- Arguments can be passed
+- Node built-in modules rely on events
+
+-------------------------------------------------------------
+Key Takeaways
+-------------
+- Event Loop offloads async tasks, prevents blocking.
+- Use Promises + Async/Await for clean async code.
+- util.promisify converts callbacks to Promises.
+- EventEmitter enables event-driven programming.
+- Order of execution matters in events.
+- Arguments can be passed to events.
+- Node internal modules rely on events heavily.
+-------------------------------------------------------------
