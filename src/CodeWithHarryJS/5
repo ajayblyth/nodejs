@@ -1,0 +1,182 @@
+-------------------------------------------------------------
+JAVASCRIPT TUTORIAL – SECTION 5: OBJECTS
+(Timestamp: 03:00 – 03:40 hrs)
+-------------------------------------------------------------
+
+1. INTRODUCTION TO OBJECTS
+--------------------------
+1.1 Objects are collections of key-value pairs.
+1.2 Keys are also called **properties**.
+1.3 Values can be of any type (string, number, array, function, another object).
+1.4 Used to represent real-world entities.
+
+Example:
+    const user = {
+      name: "Ajay",
+      age: 30,
+      isAdmin: true
+    };
+
+-------------------------------------------------------------
+
+2. ACCESSING OBJECT PROPERTIES
+------------------------------
+2.1 Dot notation:
+    console.log(user.name); // Ajay
+
+2.2 Bracket notation:
+    console.log(user["age"]); // 30
+
+2.3 Useful when property names are dynamic or contain spaces.
+
+-------------------------------------------------------------
+
+3. ADDING & UPDATING PROPERTIES
+-------------------------------
+3.1 Adding:
+    user.email = "ajay@example.com";
+
+3.2 Updating:
+    user.age = 31;
+
+-------------------------------------------------------------
+
+4. DELETING PROPERTIES
+----------------------
+4.1 Use `delete` keyword:
+    delete user.isAdmin;
+
+-------------------------------------------------------------
+
+5. NESTED OBJECTS
+-----------------
+5.1 Objects inside objects.
+Example:
+    const person = {
+      name: "Ajay",
+      address: {
+        city: "Delhi",
+        pin: 110001
+      }
+    };
+
+    console.log(person.address.city); // Delhi
+
+-------------------------------------------------------------
+
+6. OBJECT METHODS
+-----------------
+6.1 Functions inside objects are called methods.
+Example:
+    const car = {
+      brand: "Toyota",
+      start: function() {
+        console.log("Car started");
+      }
+    };
+
+    car.start(); // Car started
+
+6.2 ES6 shorthand:
+    const car = {
+      brand: "Toyota",
+      start() {
+        console.log("Car started");
+      }
+    };
+
+-------------------------------------------------------------
+
+7. `this` KEYWORD
+-----------------
+7.1 Refers to the current object inside methods.
+Example:
+    const user = {
+      name: "Ajay",
+      greet() {
+        console.log(`Hello, my name is ${this.name}`);
+      }
+    };
+
+    user.greet(); // Hello, my name is Ajay
+
+-------------------------------------------------------------
+
+8. OBJECT CONSTRUCTOR FUNCTION
+------------------------------
+8.1 Used to create multiple objects of the same type.
+Example:
+    function Person(name, age) {
+      this.name = name;
+      this.age = age;
+    }
+
+    const p1 = new Person("Ajay", 30);
+    const p2 = new Person("Rahul", 25);
+
+    console.log(p1.name); // Ajay
+
+-------------------------------------------------------------
+
+9. OBJECT.CREATE()
+------------------
+9.1 Create new objects from existing prototype.
+Example:
+    const animal = { eats: true };
+    const dog = Object.create(animal);
+    console.log(dog.eats); // true
+
+-------------------------------------------------------------
+
+10. OBJECT METHODS (BUILT-IN)
+-----------------------------
+10.1 Object.keys(obj) → returns array of keys.
+10.2 Object.values(obj) → returns array of values.
+10.3 Object.entries(obj) → returns array of [key, value] pairs.
+
+Example:
+    const user = { name: "Ajay", age: 30 };
+    console.log(Object.keys(user));   // [ "name", "age" ]
+    console.log(Object.values(user)); // [ "Ajay", 30 ]
+    console.log(Object.entries(user));// [ ["name","Ajay"], ["age",30] ]
+
+-------------------------------------------------------------
+
+11. DESTRUCTURING OBJECTS
+-------------------------
+11.1 Extract values into variables.
+Example:
+    const { name, age } = user;
+    console.log(name); // Ajay
+    console.log(age);  // 30
+
+11.2 Nested destructuring:
+    const person = { name: "Ajay", address: { city: "Delhi" } };
+    const { address: { city } } = person;
+    console.log(city); // Delhi
+
+-------------------------------------------------------------
+
+12. SPREAD OPERATOR WITH OBJECTS
+--------------------------------
+12.1 Used to clone or merge objects.
+Example:
+    const user1 = { name: "Ajay" };
+    const user2 = { age: 30 };
+    const merged = { ...user1, ...user2 };
+    console.log(merged); // { name: "Ajay", age: 30 }
+
+-------------------------------------------------------------
+
+13. SUMMARY / KEY TAKEAWAYS
+---------------------------
+13.1 Objects = key-value pairs to represent entities.
+13.2 Access with dot/bracket notation.
+13.3 Can add, update, delete properties dynamically.
+13.4 Methods = functions inside objects, use `this`.
+13.5 Create objects via constructor functions or `Object.create`.
+13.6 Use Object.keys, values, entries for iteration.
+13.7 Use destructuring & spread for cleaner code.
+
+-------------------------------------------------------------
+

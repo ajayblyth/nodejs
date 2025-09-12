@@ -1,0 +1,135 @@
+-------------------------------------------------------------
+JAVASCRIPT TUTORIAL – SECTION 3: LOOPS
+(Timestamp: 01:30 – 02:15 hrs)
+-------------------------------------------------------------
+
+1. INTRODUCTION TO LOOPS
+------------------------
+1.1 Loops allow us to execute a block of code multiple times.
+1.2 Types of loops in JavaScript:
+    - for
+    - while
+    - do...while
+    - for...of
+    - for...in
+    - forEach (array method, not traditional loop)
+
+-------------------------------------------------------------
+
+2. FOR LOOP
+-----------
+2.1 Syntax:
+    for (initialization; condition; increment/decrement) {
+      // code
+    }
+
+2.2 Example:
+    for (let i = 1; i <= 5; i++) {
+      console.log("Iteration:", i);
+    }
+    // Output: Iteration 1 ... Iteration 5
+
+-------------------------------------------------------------
+
+3. WHILE LOOP
+-------------
+3.1 Syntax:
+    while (condition) {
+      // code
+    }
+
+3.2 Example:
+    let i = 1;
+    while (i <= 5) {
+      console.log("While loop:", i);
+      i++;
+    }
+
+-------------------------------------------------------------
+
+4. DO...WHILE LOOP
+------------------
+4.1 Syntax:
+    do {
+      // code
+    } while (condition);
+
+4.2 Example:
+    let i = 1;
+    do {
+      console.log("Do While:", i);
+      i++;
+    } while (i <= 5);
+
+4.3 Key difference → do...while always executes at least once.
+
+-------------------------------------------------------------
+
+5. FOR...OF LOOP
+----------------
+5.1 Used for iterating over iterable objects (like arrays, strings).
+5.2 Example:
+    let items = ["pen", "book", "phone"];
+    for (let item of items) {
+      console.log(item);
+    }
+    // Output: pen, book, phone
+
+5.3 Another Example with string:
+    for (let char of "Hello") {
+      console.log(char);
+    }
+
+-------------------------------------------------------------
+
+6. FOR...IN LOOP
+----------------
+6.1 Used for iterating over object properties.
+6.2 Example:
+    let user = { name: "Ajay", age: 30, city: "Delhi" };
+    for (let key in user) {
+      console.log(key, ":", user[key]);
+    }
+    // Output: name Ajay, age 30, city Delhi
+
+-------------------------------------------------------------
+
+7. forEach METHOD (Array Only)
+------------------------------
+7.1 Syntax:
+    array.forEach(function(element, index) {
+      // code
+    });
+
+7.2 Example:
+    let numbers = [10, 20, 30];
+    numbers.forEach((num, index) => {
+      console.log("Index:", index, "Value:", num);
+    });
+
+-------------------------------------------------------------
+
+8. BREAK & CONTINUE
+-------------------
+8.1 break → exits the loop completely.
+8.2 continue → skips current iteration, continues with next.
+
+8.3 Example:
+    for (let i = 1; i <= 5; i++) {
+      if (i === 3) continue;  // skip 3
+      if (i === 5) break;     // stop loop at 5
+      console.log(i);
+    }
+    // Output: 1, 2, 4
+
+-------------------------------------------------------------
+
+9. SUMMARY / KEY TAKEAWAYS
+--------------------------
+9.1 Use for, while, do...while for repetition.
+9.2 Use for...of for arrays/strings.
+9.3 Use for...in for objects.
+9.4 Use forEach for array iteration with callbacks.
+9.5 Use break to exit loop, continue to skip iteration.
+
+-------------------------------------------------------------

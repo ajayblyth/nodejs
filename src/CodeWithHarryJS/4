@@ -1,0 +1,156 @@
+-------------------------------------------------------------
+JAVASCRIPT TUTORIAL – SECTION 4: FUNCTIONS
+(Timestamp: 02:15 – 03:00 hrs)
+-------------------------------------------------------------
+
+1. INTRODUCTION TO FUNCTIONS
+----------------------------
+1.1 Functions are reusable blocks of code that perform a specific task.
+1.2 They help in:
+    - Code reusability
+    - Code organization
+    - Reducing repetition
+
+-------------------------------------------------------------
+
+2. FUNCTION DECLARATION
+-----------------------
+2.1 Syntax:
+    function functionName(parameters) {
+      // code
+      return value;
+    }
+
+2.2 Example:
+    function greet(name) {
+      return "Hello " + name;
+    }
+    console.log(greet("Ajay")); // Hello Ajay
+
+-------------------------------------------------------------
+
+3. FUNCTION EXPRESSION
+----------------------
+3.1 Assigning a function to a variable.
+3.2 Example:
+    const add = function(a, b) {
+      return a + b;
+    };
+    console.log(add(5, 10)); // 15
+
+-------------------------------------------------------------
+
+4. ARROW FUNCTIONS (ES6+)
+-------------------------
+4.1 Shorter syntax for functions.
+4.2 Syntax:
+    const functionName = (parameters) => {
+      // code
+    };
+
+4.3 Examples:
+    const square = (num) => num * num;
+    console.log(square(4)); // 16
+
+    const greet = name => `Hello ${name}`;
+    console.log(greet("Ajay")); // Hello Ajay
+
+-------------------------------------------------------------
+
+5. DEFAULT PARAMETERS
+---------------------
+5.1 You can set default values for parameters.
+5.2 Example:
+    function multiply(a, b = 2) {
+      return a * b;
+    }
+    console.log(multiply(5));   // 10
+    console.log(multiply(5, 3)); // 15
+
+-------------------------------------------------------------
+
+6. REST PARAMETERS (...)
+------------------------
+6.1 Collects multiple arguments into an array.
+6.2 Example:
+    function sum(...numbers) {
+      return numbers.reduce((acc, num) => acc + num, 0);
+    }
+    console.log(sum(1, 2, 3, 4)); // 10
+
+-------------------------------------------------------------
+
+7. RETURN STATEMENT
+-------------------
+7.1 Functions can return values using `return`.
+7.2 If no return → function returns `undefined`.
+
+Example:
+    function hello() {
+      console.log("Hello World");
+    }
+    console.log(hello()); // Output: Hello World, undefined
+
+-------------------------------------------------------------
+
+8. FUNCTIONS ARE FIRST-CLASS CITIZENS
+-------------------------------------
+8.1 In JavaScript, functions can be:
+    - Assigned to variables
+    - Passed as arguments
+    - Returned from other functions
+
+8.2 Example:
+    function sayHello() {
+      return "Hello!";
+    }
+
+    function callFunc(fn) {
+      console.log(fn());
+    }
+
+    callFunc(sayHello); // Output: Hello!
+
+-------------------------------------------------------------
+
+9. CALLBACK FUNCTIONS
+---------------------
+9.1 A function passed as an argument to another function.
+9.2 Example:
+    function processUserInput(name, callback) {
+      console.log("User:", name);
+      callback();
+    }
+
+    function sayBye() {
+      console.log("Goodbye!");
+    }
+
+    processUserInput("Ajay", sayBye);
+    // Output: User: Ajay
+    //         Goodbye!
+
+-------------------------------------------------------------
+
+10. ANONYMOUS FUNCTIONS
+-----------------------
+10.1 Functions without a name.
+10.2 Example:
+    setTimeout(function() {
+      console.log("Executed after 2 seconds");
+    }, 2000);
+
+-------------------------------------------------------------
+
+11. SUMMARY / KEY TAKEAWAYS
+---------------------------
+11.1 Functions = reusable code blocks.
+11.2 Function types:
+     - Declaration
+     - Expression
+     - Arrow Functions
+11.3 Use default & rest parameters for flexibility.
+11.4 Functions are first-class citizens (can be passed around).
+11.5 Callbacks and anonymous functions are common in async tasks.
+
+-------------------------------------------------------------

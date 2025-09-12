@@ -1,3 +1,108 @@
+-------------------------------------------------------------
+NODE.JS: INTRODUCTION & ORIGINS
+-------------------------------------------------------------
+
+1. What is Node.js?
+-------------------
+- Node.js = Environment to run JavaScript outside of the browser.
+- Created in 2009 by Ryan Dahl.
+- Built on top of Chrome’s V8 JavaScript engine.
+- Purpose: Run JS on the server, not just in browsers.
+
+2. V8 JavaScript Engine
+-----------------------
+- Every browser has an engine to compile JS → machine code.
+- Chrome uses **V8 engine** (fast, optimized).
+- Node.js takes V8 out of Chrome and runs it standalone.
+- This allows JavaScript to run directly on the operating system.
+
+3. Why Node.js?
+---------------
+3.1 Community:
+    - Large open-source community.
+    - Many libraries/packages available via npm.
+    - Saves development time.
+
+3.2 Full-Stack Development:
+    - Frontend + Backend both in JavaScript.
+    - Easier for developers to build full apps with one language.
+    - Eliminates "language switching" between client and server.
+
+-------------------------------------------------------------
+NODE.JS: REQUIREMENTS, DIFFERENCES & INSTALLATION
+-------------------------------------------------------------
+
+1. Course_Udemy Requirements
+----------------------
+- Prerequisites:
+  * Basic HTML
+  * Simple CSS
+  * General understanding of JavaScript:
+      - ES6 features
+      - Callbacks
+      - Promises
+      - async/await
+- Instructor will not cover deep JS basics (focus = Node.js).
+- If needed: Brush up using "Coding Addict" YouTube channel,
+  especially the "JS Nuggets" playlist (covers ES6 & async JS).
+
+2. Browser JS vs Node.js
+------------------------
+2.1 What Node.js does NOT have:
+    - No browser APIs (no DOM, no window object, no fetch,
+      no geolocation, etc.)
+    - Node apps = pure logic, not interactive UIs.
+    - You won’t use `document.querySelector` in Node.
+
+2.2 What Node.js DOES provide:
+    - File system access
+    - Operating system info
+    - Responding to network requests
+    - Modules system (CommonJS by default)
+
+2.3 Versions:
+    - Node apps depend only on the Node version used.
+    - Different from browsers (where features depend on user’s browser).
+    - You can keep running your app on the same Node version
+      without worrying about browser compatibility.
+
+2.4 Modules in Node:
+    - Available by default.
+    - Node uses **CommonJS module system**.
+    - Concept is similar to ES6 modules, but syntax differs.
+      Example:
+        const fs = require('fs');   // CommonJS
+        import fs from 'fs';        // ES6 (browser style)
+
+3. Installing Node.js
+---------------------
+3.1 Steps:
+    - Visit: https://nodejs.org
+    - Choose **LTS version** (Long Term Support).
+    - Download & run installer.
+    - Click through prompts (Yes/Agree/Install).
+    - Enter system password if required.
+    - After install, remove installer file if you want.
+
+3.2 Verify Installation:
+    - Open terminal.
+    - Run: node --version
+    - Expected: shows version number (e.g., v14.x, v18.x, v20.x).
+
+3.3 Troubleshooting:
+    - If version does not appear, installation failed.
+    - Instructor cannot debug your local setup.
+    - Use Google/search engines for specific errors.
+
+3.4 LTS vs Current:
+    - Node.js offers two releases:
+        a) **LTS** = Long Term Support (recommended for production).
+        b) Current = Latest features, less stable for production.
+    - Always prefer LTS for stability.
+    - If your version is newer than instructor’s, no issue.
+    - Course_Udemy content will work fine with future LTS versions.
+
+
 ================================================================================
 INDEX
 ================================================================================
