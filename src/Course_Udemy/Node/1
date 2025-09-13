@@ -123,7 +123,7 @@ INDEX
 
 1. CREATING A NODE PROJECT
 --------------------------------------------------------------------------------
-- Create folder "tutorial" → open in VS Code.
+- Create folder "tutorial" → open with Code.
 - Create file "app.js". Node runs JS outside browser.
 
 Example:
@@ -149,35 +149,78 @@ Run in terminal:
 ================================================================================
 2. GLOBALS IN NODE.JS
 --------------------------------------------------------------------------------
-- Node has its own globals (unlike browsers "window"):
+- Meaning:
+  "Globals" are identifiers Node provides automatically.
+  You can use them anywhere without importing.
+  They belong to Node's global object (`global` / `globalThis`).
 
-Common Globals:
-- __dirname   → path to current directory
-- __filename  → path to current file
-- require     → import modules
-- module      → info about current module
-- process     → info about environment (OS, runtime, env vars)
-- console     → available globally
-- setInterval, setTimeout → timers available globally
+- Important Note:
+  Node wraps each file in a function.
+  -> Top-level variables (let/const/var) are NOT global.
+  -> True global only if attached to `global.myVar`.
 
-Example:
-    console.log(__dirname);
-    console.log(__filename);
+- Common Globals:
+  __dirname     : Directory path of current module (CommonJS only)
+  __filename    : File path of current module (CommonJS only)
+  require       : Import CommonJS modules
+  module/exports: Info & export object for current module
+  process       : Runtime/env info (env vars, args, exit, etc.)
+  console       : Global logging methods
+  setTimeout    : Run function after delay (clearTimeout to stop)
+  setInterval   : Run repeatedly after interval (clearInterval to stop)
+  global        : Node's global object
+  globalThis    : Standard global object (works in Node & browsers)
 
-    setInterval(() => {
-        console.log("hello world");
-    }, 1000);
+- Example:
+  6. Example using All Common Globals
+  --------------------------------------------------------------------------------
+  const path = require("path");   // <-- using require (CommonJS)
 
-Stop interval: Ctrl + C in terminal
+  // __dirname & __filename
 
+  console.log("Directory:", __dirname);
+  console.log("File:", __filename);
+
+  // module / exports
+  console.log("Module Info:", module.id);
+
+  // process (env + args)
+  console.log("Node Version:", process.version);
+  console.log("Arguments:", process.argv);
+
+  // console
+  console.log("Logging something with console.log");
+
+  // setTimeout + setInterval
+  const timer = setInterval(() => {
+      console.log("Interval running...");
+  }, 1000);
+
+  setTimeout(() => {
+      console.log("Stopping interval after 3 sec");
+      clearInterval(timer);
+  }, 3000);
+
+  // global & globalThis
+  global.myVar = "I am global!";
+  console.log(globalThis.myVar);
+  --------------------------------------------------------------------------------
+- Best Practices:
+  * Prefer modules over attaching things to globals
+  * Be aware of CommonJS vs ESM differences
+  * Avoid polluting global scope (hard to debug/test)
 ================================================================================
 3. MODULES IN NODE.JS
---------------------------------------------------------------------------------
-- Each file is a module by default
-- Use module.exports to share code
-- Use require('./path') to import
+================================================================================
+- Meaning:
+  * In Node.js, every file is treated as a separate module by default.
+  * This prevents variables/functions from polluting the global scope.
+  * To share code → use exports (CommonJS or ES Modules).
 
-Example (without modules):
+--------------------------------------------------------------------------------
+A) Without Modules (all code in one file)
+--------------------------------------------------------------------------------
+    // file: app.js
     const john = "john";
     const peter = "peter";
 
@@ -187,7 +230,105 @@ Example (without modules):
 
     sayHi("Susan");
     sayHi(john);
-    sayHi(peter)
+    sayHi(peter);
+
+- Problem:
+  * Code is in a single file → messy for big projects.
+  * Hard to reuse code in other files.
+  * No separation of concerns.
+
+--------------------------------------------------------------------------------
+B) With CommonJS Modules (default in Node)
+--------------------------------------------------------------------------------
+    // file: names.js
+    const john = "john";
+    const peter = "peter";
+    module.exports = { john, peter };
+
+    // file: utils.js
+    function sayHi(name) {
+        console.log(`Hello there ${name}`);   // Template Literal (backticks `...`)
+                                                  `Hello there ${name}`
+
+                                              - Backtick strings allow embedding variables with ${ }.
+                                              - In Java, similar to string concatenation:
+                                                    "Hello there " + name
+    }
+    module.exports = sayHi;
+
+    // file: app.js
+    const names = require("./names");
+    const sayHi = require("./utils");
+
+    sayHi("Susan");
+    sayHi(names.john);
+    sayHi(names.peter);
+
+- Explanation:
+  * `module.exports` → defines what a file exports.
+  * `require("./file")` → imports that module into another file.
+  * Now each file is focused and reusable.
+
+--------------------------------------------------------------------------------
+C) With ES Modules (modern standard)
+--------------------------------------------------------------------------------
+    // file: names.mjs
+    export const john = "john";
+    export const peter = "peter";
+
+    // file: utils.mjs
+    export function sayHi(name) {
+        console.log(`Hello there ${name}`);
+    }
+
+    // file: app.mjs
+    import { john, peter } from "./names.mjs";
+    import { sayHi } from "./utils.mjs";
+
+    sayHi("Susan");
+    sayHi(john);
+    sayHi(peter);
+
+- Explanation:
+  * `export` / `import` are ES6 standard.
+  * Portable across browsers + Node.
+  * Need `"type": "module"` in package.json or `.mjs` extension.
+
+  --In Node.js, there are two module systems:
+
+    CommonJS (CJS) → the old default (require, module.exports).
+
+    ES Modules (ESM) → the modern standard (import, export).
+
+    By default, Node treats .js files as CommonJS.
+    If you want to use modern import / export syntax, you must either:
+
+    Add "type": "module" in your package.json, or
+
+    Rename files with .mjs extension.
+
+    👉 This tells Node: “treat my files as ES modules instead of CommonJS.”
+
+--------------------------------------------------------------------------------
+D) Difference (Summary)
+--------------------------------------------------------------------------------
+Aspect              | CommonJS (CJS)                | ES Modules (ESM)
+--------------------|-------------------------------|------------------------------
+Keywords            | require, module.exports       | import, export
+File Extension      | .js (default)                 | .mjs OR "type":"module"
+Loading             | Synchronous                   | Asynchronous
+Where Used          | Node.js (older & current)     | Standard JS (Node + Browsers)
+Interop             | Works with most npm packages  | Some packages now ESM only
+Use Case            | Legacy / existing projects    | New, modern projects
+
+--------------------------------------------------------------------------------
+E) Best Practices
+--------------------------------------------------------------------------------
+* Always split code into modules for readability & reusability.
+* Prefer ES Modules (`import/export`) for modern projects.
+* Stick to CommonJS if project/codebase already uses it.
+* Do not mix both styles unless absolutely required.
+================================================================================
 
 ================================================================================
 4. SPLITTING CODE INTO MODULES
@@ -377,18 +518,30 @@ Notes:
 
 --------------------------------------------------------------------------------
 11a. Routing Example
-    const server = http.createServer((req, res) => {
-        if(req.url === '/') {
-            res.end('Welcome to our homepage');
-            return;
-        }
-        if(req.url === '/about') {
-            res.end('Here is our short history');
-            return;
-        }
-        res.end(`<p>We can't seem to find the page you're looking for.</p>
-                 <a href="/">Go back home</a>`);
-    });
+const http = require('http');
+
+const server = http.createServer((req, res) => {
+    // Home page
+    if (req.url === '/') {
+        res.end('Welcome to our homepage');
+    }
+    // About page
+    else if (req.url === '/about') {
+        res.end('Here is our short history');
+    }
+    // 404 - Page not found
+    else {
+        res.end(`
+            <p>We can't seem to find the page you're looking for.</p>
+            <a href="/">Go back home</a>
+        `);
+    }
+});
+
+// Start the server on port 5000
+server.listen(5000, () => {
+    console.log('Server is listening on http://localhost:5000');
+});
 
 Notes:
 - Must send only one response per request
@@ -459,6 +612,37 @@ Notes:
 ================================================================================
 - Purpose: Manage project dependencies and metadata.
 - npm comes with Node.js by default.
+
+PACKAGE.JSON - NODE.JS PROJECT MANIFEST
+--------------------------------------
+
+1. Purpose:
+   - Holds metadata about the project: name, version, author, license, etc.
+   - Lists dependencies: libraries required for the project (e.g., express, lodash).
+   - Defines scripts: commands runnable via "npm run <script>".
+   - Specifies Node.js version compatibility.
+
+2. Example:
+
+{
+    "name": "my-node-app",
+    "version": "1.0.0",
+    "description": "A simple Node.js project",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js",
+        "test": "echo \"No tests defined\" && exit 0"
+    },
+    "author": "Ajay Sharma",
+    "license": "MIT",
+    "dependencies": {
+        "express": "^4.18.2"
+    },
+    "devDependencies": {
+        "nodemon": "^3.0.2"
+    }
+}
+
 
 --------------------------------------------------------------------------------
 14a. Creating package.json
@@ -538,6 +722,13 @@ Notes:
 - Production uses only runtime dependencies
 - DevDependencies stored separately in package.json
 
+-D or --save-dev → tells npm to put it in "devDependencies" instead of "dependencies"
+
+Why separate them?
+
+Smaller production build → no extra packages you don’t need at runtime
+
+Clear project structure → everyone knows which packages are for coding vs running the app
 --------------------------------------------------------------------------------
 16d. Scripts in package.json
 --------------------------------------------------------------------------------
@@ -573,11 +764,39 @@ Notes:
 4. Scripts in package.json simplify running commands
 5. npm uninstall and nuclear approach help manage/remove packages safely
 
+Example .gitignore
+
+Where to create/write .gitignore
+
+Go to the root of your project folder (the same folder where package.json is).
+
+Create a file named .gitignore (literally with a dot at the beginning).
+
+In VS Code: Right-click → New File → name it .gitignore
+
+In terminal:
+
+touch .gitignore
+
+Add the files/folders you want Git to ignore. Example for Node.js:
+# Node.js dependencies
+node_modules/
+
+# Logs
+logs/
+*.log
+
+# Environment variables
+.env
+
+# OS files
+.DS_Store
+Thumbs.db
+
 ================================================================================
 18. GLOBAL PACKAGE INSTALLATION & NPX
 ================================================================================
 - Command for global install: `npm install -g <packageName>`
-- Mac users may need `sudo` for permissions
 - Global packages can be used in any project
 - Example: nodemon installed globally → can run `nodemon app.js` anywhere
 
