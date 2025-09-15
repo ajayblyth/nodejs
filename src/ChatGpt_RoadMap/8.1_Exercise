@@ -1,0 +1,93 @@
+=============================================================
+EXERCISES – OBJECTS
+=============================================================
+
+1. Create a simple object
+-------------------------
+Create an object called `car` with properties:
+- brand = "Toyota"
+- model = "Corolla"
+- year = 2020
+Print the object.
+
+-------------------------------------------------------------
+2. Access properties
+--------------------
+Using the `car` object above:
+- Print only the brand.
+- Print only the year.
+
+-------------------------------------------------------------
+3. Update properties
+--------------------
+Change the `year` of the `car` object to 2023.
+Print the updated object.
+
+-------------------------------------------------------------
+4. Add new property
+-------------------
+Add a new property `color = "blue"` to the `car` object.
+Print the object.
+
+-------------------------------------------------------------
+5. Delete a property
+--------------------
+Remove the property `model` from the `car` object.
+Print the object.
+
+-------------------------------------------------------------
+6. Object methods
+-----------------
+Create an object `person` with:
+- name = "Ajay"
+- age = 25
+- greet() method that prints: "Hello, my name is Ajay."
+
+Call the greet method.
+
+-------------------------------------------------------------
+7. this keyword
+---------------
+Inside the `person` object, modify `greet()` so it uses `this.name`
+instead of hardcoding "Ajay".
+Now change `person.name` to "Rahul" and call greet() again.
+
+-------------------------------------------------------------
+8. Object.keys() and Object.values()
+------------------------------------
+Use `Object.keys(person)` to print all keys.
+Use `Object.values(person)` to print all values.
+
+-------------------------------------------------------------
+9. Nested objects
+-----------------
+Create an object `student` with:
+- name = "Ravi"
+- marks = { math: 90, science: 85 }
+
+Access and print Ravi's science marks.
+
+-------------------------------------------------------------
+10. Loop through object
+-----------------------
+Use `for...in` loop to print all properties of `student`.
+
+-------------------------------------------------------------
+11. Spread operator
+-------------------
+Create:
+let car1 = { brand: "Honda", year: 2019 };
+Make a copy called car2 using `{ ...car1 }`.
+Change year in car2 to 2022.
+Print both car1 and car2. (Check if original is safe.)
+
+-------------------------------------------------------------
+12. Object destructuring
+------------------------
+Create an object:
+let laptop = { brand: "Dell", ram: "16GB", cpu: "i7" };
+
+Use destructuring to extract `brand` and `ram` into variables.
+Print them.
+
+=============================================================

@@ -1,0 +1,102 @@
+=============================================================
+SOLUTIONS – OBJECTS
+=============================================================
+
+1. Create a simple object
+-------------------------
+let car = { brand: "Toyota", model: "Corolla", year: 2020 };
+console.log(car);
+
+-------------------------------------------------------------
+2. Access properties
+--------------------
+console.log(car.brand);   // Toyota
+console.log(car.year);    // 2020
+
+-------------------------------------------------------------
+3. Update properties
+--------------------
+car.year = 2023;
+console.log(car);
+
+-------------------------------------------------------------
+4. Add new property
+-------------------
+car.color = "blue";
+console.log(car);
+
+-------------------------------------------------------------
+5. Delete a property
+--------------------
+delete car.model;
+console.log(car);
+
+-------------------------------------------------------------
+6. Object methods
+-----------------
+let person = {
+  name: "Ajay",
+  age: 25,
+  greet: function() {
+    console.log("Hello, my name is Ajay.");
+  }
+};
+person.greet();
+
+-------------------------------------------------------------
+7. this keyword
+---------------
+let person = {
+  name: "Ajay",
+  age: 25,
+  greet: function() {
+    console.log("Hello, my name is " + this.name);
+  }
+};
+person.greet();   // Hello, my name is Ajay
+person.name = "Rahul";
+person.greet();   // Hello, my name is Rahul
+
+-------------------------------------------------------------
+8. Object.keys() and Object.values()
+------------------------------------
+console.log(Object.keys(person));   // ["name", "age", "greet"]
+console.log(Object.values(person)); // ["Rahul", 25, ƒ]
+
+-------------------------------------------------------------
+9. Nested objects
+-----------------
+let student = {
+  name: "Ravi",
+  marks: { math: 90, science: 85 }
+};
+console.log(student.marks.science);   // 85
+
+-------------------------------------------------------------
+10. Loop through object
+-----------------------
+for (let key in student) {
+  console.log(key + ": " + student[key]);
+}
+// name: Ravi
+// marks: [object Object]   (nested object not expanded here)
+
+-------------------------------------------------------------
+11. Spread operator
+-------------------
+let car1 = { brand: "Honda", year: 2019 };
+let car2 = { ...car1 };
+car2.year = 2022;
+
+console.log(car1); // { brand: "Honda", year: 2019 }
+console.log(car2); // { brand: "Honda", year: 2022 }
+
+-------------------------------------------------------------
+12. Object destructuring
+------------------------
+let laptop = { brand: "Dell", ram: "16GB", cpu: "i7" };
+let { brand, ram } = laptop;
+console.log(brand); // Dell
+console.log(ram);   // 16GB
+
+=============================================================

@@ -1,0 +1,283 @@
+-------------------------------------------------------------
+SECTION 8: ES6+ MODERN JS (THOROUGH, NODE.JS FOCUSED)
+-------------------------------------------------------------
+8.1 let and const (block scope)
+--------------------------------
+- let: block-scoped variable; can be reassigned but not redeclared in same scope.
+  Example:
+  let x = 10;
+  x = 20;            // allowed
+- const: block-scoped constant; must be initialized; cannot be reassigned.
+  Example:
+  const PI = 3.14;
+  // PI = 3.1415;   // error
+
+- Temporal Dead Zone (TDZ):
+  // accessing before declaration causes ReferenceError
+  // console.log(a); // ReferenceError
+  let a = 5;
+
+- Note on objects/arrays with const:
+  const obj = { name: "Ajay" };
+  obj.name = "Ravi";  // allowed — property mutation allowed
+  // obj = {};         // error — reassigning the reference is not allowed
+
+Good practices:
+- Prefer const by default; use let when you need to reassign.
+- Avoid var (function-scoped, hoisted to undefined) in modern code.
+
+Common pitfalls:
+- Expecting const to make objects immutable — it does not freeze properties.
+
+-------------------------------------------------------------
+8.2 Template Literals
+---------------------
+- Backticks `...` allow string interpolation and multi-line strings.
+  Example:
+  const name = "Ajay";
+  const greeting = `Hello, ${name}!`;      // Hello, Ajay!
+  const multi = `Line1
+  Line2`;                                  // multi-line string
+
+- You can embed expressions:
+  `Total: ${a + b}`
+
+Good practices:
+- Use template literals for readable string building instead of + concatenation.
+
+-------------------------------------------------------------
+8.3 Arrow Functions
+-------------------
+- Short syntax: (params) => expression or (params) => { statements }
+  Examples:
+  const add = (a, b) => a + b;             // implicit return
+  const greet = name => { console.log(name); };  // block body needs return
+
+- Key differences from regular functions:
+  1. Arrow functions do not have their own `this` — they use lexical `this` from outer scope.
+  2. Arrow functions cannot be used as constructors (no new).
+  3. Arrow functions do not have their own `arguments` object.
+
+Example (this behavior):
+  function Person() {
+    this.age = 0;
+    setInterval(() => { this.age++; }, 1000); // arrow inherits this -> works
+  }
+
+Common pitfalls:
+- Using arrow functions as object methods if you rely on `this` pointing to the object:
+  const obj = {
+    x: 10,
+    m: () => console.log(this.x) // wrong: this is not obj
+  };
+
+Good practices:
+- Use arrow functions for callbacks and short functions.
+- Use regular functions for methods that need their own `this`.
+
+-------------------------------------------------------------
+8.4 Default / Rest / Spread Operators ( ... )
+----------------------------------------------
+- Default parameters:
+  function greet(name = "Guest") { console.log(name); }
+  greet();           // Guest
+
+- Rest parameters (collect arguments into an array):
+  function sum(...nums) { return nums.reduce((s, n) => s + n, 0); }
+  sum(1,2,3);        // 6
+
+- Spread operator (expand iterable into elements):
+  const a = [1,2];
+  const b = [...a, 3, 4];   // [1,2,3,4]
+  const obj = {x:1};
+  const obj2 = {...obj, y:2}; // {x:1, y:2}
+
+Differences (rest vs spread):
+- Rest is used in function parameter position to collect remaining args into an array.
+- Spread is used in calls/arrays/objects to expand elements.
+
+Important note on objects:
+- Spread for objects performs a **shallow copy** (nested objects still reference same inner objects).
+
+Good practices:
+- Use rest to accept variable args.
+- Use spread to shallow-copy arrays/objects or merge them.
+
+-------------------------------------------------------------
+8.5 Destructuring (arrays & objects)
+------------------------------------
+- Array destructuring:
+  const [a, b] = [10, 20];
+  const [first, , third = 30] = [1, 2]; // third defaults to 30
+
+- Object destructuring:
+  const user = { name: "Ajay", age: 30 };
+  const { name, age } = user;      // name = "Ajay", age = 30
+  const { name: username } = user; // rename while destructuring
+
+- Default values & nested:
+  const { address: { city = "Unknown" } = {} } = user;
+
+- Destructuring in function parameters:
+  function display({ name, age = 18 }) { console.log(name, age); }
+  display(user);
+
+Good practices:
+- Use destructuring to simplify extracting values from objects/arrays.
+- Provide defaults when destructuring possibly-undefined values.
+
+Common pitfalls:
+- Destructuring an undefined/null object throws. Use defaults: `= {}`.
+
+-------------------------------------------------------------
+8.6 Enhanced Object Literals
+----------------------------
+- Property shorthand:
+  const name = "Ajay";
+  const user = { name };   // equivalent to { name: name }
+
+- Method shorthand:
+  const obj = { greet() { return "hi"; } };
+
+- Computed property names:
+  const key = "id";
+  const o = { [key]: 123 };  // { id: 123 }
+
+- Useful when building objects dynamically.
+
+Good practices:
+- Use shorthand for cleaner code.
+- Use computed names for dynamic keys.
+
+-------------------------------------------------------------
+8.7 For-of loop
+----------------
+- Iterates over iterable values (arrays, strings, maps, sets).
+  const arr = [10,20,30];
+  for (const v of arr) { console.log(v); }
+
+- Contrast with for-in:
+  - for-in iterates keys (object property names), not recommended for arrays.
+  - for-of is best for arrays and other iterables.
+
+- forEach vs for-of:
+  - forEach cannot use break/continue; for-of can.
+  - for-of supports `async` behavior with `for await...of` (for async iterables).
+
+Good practices:
+- Use for-of for simple iteration and when you need break/continue.
+
+-------------------------------------------------------------
+8.8 Modules: export / import (ES Modules) & CommonJS
+---------------------------------------------------
+ES Modules (modern, recommended):
+- Exporting:
+  // named exports
+  export function add(a,b) { return a+b; }
+  export const PI = 3.14;
+
+  // default export
+  export default function main() { }
+
+- Importing:
+  import { add, PI } from './math.js';
+  import main from './main.js';    // default import
+
+Node.js notes:
+- Node historically used CommonJS (require/module.exports).
+  // CommonJS export
+  module.exports = { add, PI };
+  // CommonJS import
+  const { add } = require('./math');
+
+- To use ES modules in Node:
+  1) Set "type": "module" in package.json OR use .mjs file extension.
+  2) Then use import/export syntax.
+
+Mixing modules:
+- Mixing CommonJS and ESM can be tricky (named imports vs default). Prefer one style (use ESM in modern Node projects).
+
+Good practices:
+- Use ES modules for new projects (clean syntax). If using Node < modern version or older ecosystem libs, you may still encounter CommonJS.
+
+Common pitfalls:
+- Forgetting to set "type": "module" when using import/export in Node.
+- Relative import paths: use './module.js' (include extension in ESM in Node).
+
+-------------------------------------------------------------
+8.9 Optional Chaining (?.)
+--------------------------
+- Safely access nested properties without throwing if intermediate is null/undefined.
+  const user = null;
+  console.log(user?.profile?.name); // undefined (no error)
+
+- Use with function calls:
+  obj?.method?.();
+
+Good practices:
+- Use optional chaining when reading deep properties that may not exist.
+- Combine with nullish coalescing for defaults:
+  const name = user?.name ?? "Guest";
+
+Common pitfalls:
+- Optional chaining short-circuits to undefined — handle with default values.
+
+-------------------------------------------------------------
+8.10 Nullish Coalescing (??)
+----------------------------
+- Returns right-hand side only if left is null or undefined (NOT for other falsy values like 0 or '').
+  const port = process.env.PORT ?? 3000;  // uses 3000 only if PORT is null/undefined
+
+- Difference from ||:
+  const x = 0 || 5;  // 5   (0 is falsy)
+  const y = 0 ?? 5;  // 0   (0 is NOT null/undefined)
+
+Good practices:
+- Use ?? for defaults when 0 or empty string are valid values.
+- Use || when you want any falsy value to use default.
+
+-------------------------------------------------------------
+8.11 Shorthand Property Names
+-----------------------------
+- When object property name equals variable name:
+  const age = 30;
+  const person = { age };   // { age: 30 }
+
+- Works for methods too:
+  const obj = {
+    say() { return "hi"; }
+  };
+
+Good practices:
+- Use shorthand for concise object literals.
+
+-------------------------------------------------------------
+8.12 Short-circuit Evaluation
+-----------------------------
+- Logical operators return values, not just boolean:
+  const a = null;
+  const b = a || "default";    // "default"
+  const c = a && "value";      // null
+
+- Use for conditional expressions:
+  const result = condition && doSomething(); // doSomething() runs only if condition truthy
+
+Examples:
+  const config = userConfig || defaultConfig;
+  const val = userInput && validate(userInput);
+
+Good practices:
+- Prefer explicit checks for clarity if logic gets complicated.
+- Remember that || uses falsy semantics (0, '', false) while ?? uses nullish semantics.
+
+-------------------------------------------------------------
+Extra tips (ES6+ mindset for Node.js)
+-------------------------------------
+- Prefer immutable patterns: avoid mutating shared objects when possible.
+- Use modern array methods (map/filter/reduce) over manual loops for readability.
+- Keep functions pure where possible (no side effects), makes testing easier.
+- When migrating older Node code, convert common patterns to ESM + async/await for clarity.
+
+-------------------------------------------------------------
+End of Section 8 (ES6+)
+-------------------------------------------------------------

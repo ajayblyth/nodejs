@@ -1,0 +1,121 @@
+-------------------------------------------------------------
+SECTION 5: OBJECTS (NODE.JS FOCUSED)
+-------------------------------------------------------------
+
+5.1 Object Literals
+-------------------
+- Objects = key-value pairs
+- Keys are strings (or symbols), values can be anything
+
+Example:
+const user = {
+    name: "Ajay",
+    age: 30,
+    isAdmin: true
+};
+
+-------------------------------------------------------------
+
+5.2 Accessing Properties
+------------------------
+- Dot notation (preferred when key is known and valid identifier)
+console.log(user.name); // "Ajay"
+
+- Bracket notation (useful when key is dynamic or invalid identifier)
+console.log(user["age"]); // 30
+
+let key = "isAdmin";
+console.log(user[key]); // true
+
+-------------------------------------------------------------
+
+5.3 Adding, Updating, Deleting Properties
+-----------------------------------------
+user.email = "ajay@example.com";  // add
+user.age = 31;                    // update
+delete user.isAdmin;              // delete
+
+console.log(user);
+
+-------------------------------------------------------------
+
+5.4 Object Methods
+------------------
+- Functions inside objects are called methods
+
+const calculator = {
+    add: function(a, b) {
+        return a + b;
+    },
+    multiply(a, b) {  // shorthand
+        return a * b;
+    }
+};
+console.log(calculator.add(2, 3));      // 5
+console.log(calculator.multiply(2, 3)); // 6
+
+-------------------------------------------------------------
+
+5.5 'this' Keyword
+------------------
+- Refers to the object that is calling the method
+- In Node.js (non-strict mode), "this" in global scope = global object
+- Inside a method, "this" = current object
+
+const person = {
+    name: "Ajay",
+    greet: function() {
+        console.log("Hello, I am " + this.name);
+    }
+};
+person.greet(); // Hello, I am Ajay
+
+👉 Arrow functions do not have their own "this" (they inherit from parent scope).
+
+-------------------------------------------------------------
+
+5.6 Object Destructuring
+------------------------
+- Extract properties into variables
+
+const user = { name: "Ajay", age: 30 };
+const { name, age } = user;
+console.log(name, age); // Ajay 30
+
+- Rename during destructuring
+const { name: username } = user;
+console.log(username); // Ajay
+
+-------------------------------------------------------------
+
+5.7 Object.keys(), Object.values(), Object.entries()
+-----------------------------------------------------
+const user = { name: "Ajay", age: 30 };
+
+console.log(Object.keys(user));   // [ 'name', 'age' ]
+console.log(Object.values(user)); // [ 'Ajay', 30 ]
+console.log(Object.entries(user));// [ ['name', 'Ajay'], ['age', 30] ]
+
+-------------------------------------------------------------
+
+5.8 Nested Objects
+------------------
+const company = {
+    name: "TechCorp",
+    employees: {
+        emp1: { name: "Ajay", role: "Dev" },
+        emp2: { name: "Sam", role: "Tester" }
+    }
+};
+console.log(company.employees.emp1.name); // Ajay
+
+-------------------------------------------------------------
+
+Good Practices
+--------------
+- Use const for objects (prevents reassignment, but properties can change)
+- Prefer dot notation, bracket notation only when dynamic keys
+- Use destructuring for cleaner code
+- Be careful with "this" → in Node.js modules, "this" may not always be global
+- For deeply nested objects, prefer optional chaining (?.) to avoid errors
+-------------------------------------------------------------

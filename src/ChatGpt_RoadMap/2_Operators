@@ -1,0 +1,106 @@
+-------------------------------------------------------------
+SECTION 2: OPERATORS (NODE.JS FOCUSED)
+-------------------------------------------------------------
+
+2.1 Arithmetic Operators
+-------------------------
++   Addition
+-   Subtraction
+*   Multiplication
+/   Division
+%   Modulus (remainder)
+**  Exponentiation (power)
+++  Increment
+--  Decrement
+
+Examples:
+let a = 10, b = 3;
+console.log(a + b);  // 13
+console.log(a - b);  // 7
+console.log(a * b);  // 30
+console.log(a / b);  // 3.333...
+console.log(a % b);  // 1
+console.log(a ** b); // 1000
+
+let x = 5;
+console.log(++x); // 6 (pre-increment)
+console.log(x++); // 6 (post-increment, then becomes 7)
+
+-------------------------------------------------------------
+
+2.2 Assignment Operators
+-------------------------
+=   Assign
++=  Add and assign
+-=  Subtract and assign
+*=  Multiply and assign
+/=  Divide and assign
+%=  Modulus and assign
+
+Examples:
+let n = 10;
+n += 5; // n = n + 5 → 15
+n *= 2; // n = n * 2 → 30
+
+-------------------------------------------------------------
+
+2.3 Comparison Operators
+-------------------------
+==   Equal (loose, type conversion allowed)
+===  Strict equal (preferred, checks type + value)
+!=   Not equal (loose)
+!==  Strict not equal
+>    Greater than
+<    Less than
+>=   Greater or equal
+<=   Less or equal
+
+Examples:
+console.log(5 == "5");   // true   (type coercion)
+console.log(5 === "5");  // false  (different types)
+console.log(10 > 5);     // true
+console.log(10 <= 5);    // false
+
+👉 Good Practice:
+Always use === and !== to avoid unexpected type coercion.
+
+-------------------------------------------------------------
+
+2.4 Logical Operators
+----------------------
+&&   Logical AND
+||   Logical OR
+!    Logical NOT
+
+Examples:
+let isAdmin = true;
+let isLogged = false;
+
+console.log(isAdmin && isLogged); // false
+console.log(isAdmin || isLogged); // true
+console.log(!isAdmin);            // false
+
+-------------------------------------------------------------
+
+2.5 Ternary Operator
+---------------------
+condition ? valueIfTrue : valueIfFalse
+
+Example:
+let age = 20;
+let access = (age >= 18) ? "Allowed" : "Denied";
+console.log(access); // "Allowed"
+
+-------------------------------------------------------------
+
+2.6 Operator Precedence
+------------------------
+- Determines order of execution
+- Example:
+console.log(2 + 3 * 4);   // 14 (multiplication first)
+console.log((2 + 3) * 4); // 20 (parentheses change order)
+
+👉 Good Practice:
+Use parentheses () to make precedence explicit for readability.
+
+-------------------------------------------------------------

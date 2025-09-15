@@ -1,0 +1,152 @@
+-------------------------------------------------------------
+SECTION 4: FUNCTIONS (NODE.JS FOCUSED)
+-------------------------------------------------------------
+
+4.1 Function Declaration vs Function Expression
+-----------------------------------------------
+- Function Declaration → named function, hoisted (can call before definition)
+function greet() {
+    console.log("Hello");
+}
+greet(); // works even if called before definition
+
+- Function Expression → assigned to variable, not hoisted
+const greet = function() {
+    console.log("Hello");
+};
+greet(); // must be called after definition
+
+👉 Good Practice:
+Use const + function expression / arrow function for clarity in Node.js.
+
+-------------------------------------------------------------
+
+4.2 Function Parameters & Arguments
+-----------------------------------
+- Parameters = variables in function definition
+- Arguments = actual values passed when calling
+
+Example:
+function add(a, b) {
+    return a + b;
+}
+console.log(add(3, 5)); // 8
+
+-------------------------------------------------------------
+
+4.3 Return Values
+-----------------
+- Functions return value using "return"
+- If no return → function returns undefined
+
+Example:
+function square(n) {
+    return n * n;
+}
+console.log(square(4)); // 16
+
+-------------------------------------------------------------
+
+4.4 Arrow Functions
+-------------------
+- Shorter syntax, no own "this" (inherits from parent scope)
+- Common in Node.js for callbacks
+
+Examples:
+const double = (n) => n * 2;
+console.log(double(5)); // 10
+
+const greet = () => {
+    console.log("Hello Node.js");
+};
+greet();
+
+-------------------------------------------------------------
+
+4.5 Default Parameters
+-----------------------
+- Assign default values if no argument passed
+
+Example:
+function greet(name = "Guest") {
+    console.log("Hello " + name);
+}
+greet();        // Hello Guest
+greet("Ajay");  // Hello Ajay
+
+-------------------------------------------------------------
+
+4.6 Rest Parameters (...args)
+------------------------------
+- Collects all remaining arguments into array
+
+Example:
+function sum(...nums) {
+    return nums.reduce((a, b) => a + b, 0);
+}
+console.log(sum(1, 2, 3, 4)); // 10
+
+-------------------------------------------------------------
+
+4.7 Closures
+-------------
+- Function remembers variables from outer scope even after outer scope ends
+- Very useful in Node.js (e.g., middleware, private variables)
+
+Example:
+function outer() {
+    let count = 0;
+    return function inner() {
+        count++;
+        return count;
+    };
+}
+const counter = outer();
+console.log(counter()); // 1
+console.log(counter()); // 2
+
+-------------------------------------------------------------
+
+4.8 Immediately Invoked Function Expression (IIFE)
+---------------------------------------------------
+- Function executed immediately after definition
+- Useful to create isolated scope
+
+Example:
+(function() {
+    console.log("IIFE runs immediately");
+})();  
+
+(() => {
+    console.log("Arrow IIFE");
+})();
+
+-------------------------------------------------------------
+
+4.9 Callback Functions
+-----------------------
+- Function passed as argument to another function
+- Common in async Node.js (e.g., reading files, handling requests)
+
+Example:
+function fetchData(callback) {
+    console.log("Fetching data...");
+    callback("Data received");
+}
+fetchData((msg) => {
+    console.log(msg);
+});
+// Output:
+// Fetching data...
+// Data received
+
+👉 In Node.js, callbacks are everywhere (fs.readFile, http requests, etc.)
+-------------------------------------------------------------
+
+Good Practices
+--------------
+- Prefer const + arrow functions for callbacks
+- Use descriptive parameter names
+- Return values when function needs to produce a result
+- Avoid deep "callback hell" → later solved with Promises/Async-Await
+-------------------------------------------------------------

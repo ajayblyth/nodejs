@@ -1,0 +1,57 @@
+7. STRINGS
+----------
+7.1 String Creation
+- Strings can be created using single quotes, double quotes, or backticks (template literals).
+Examples:
+let str1 = 'Hello';
+let str2 = "World";
+let str3 = `Hello, ${str2}`;  // template literal with interpolation
+
+7.2 String Properties
+- length: returns number of characters in string
+let name = "Ajay";
+console.log(name.length);  // 4
+
+7.3 String Methods
+------------------
+- toUpperCase(): convert to uppercase
+- toLowerCase(): convert to lowercase
+- trim(): remove spaces from both ends
+- split(separator): split into array
+- substring(start, end): extract portion (no negative index)
+- slice(start, end): extract portion (can use negative index)
+- includes(substring): check if string contains substring
+- indexOf(substring): first occurrence index
+- replace(old, new): replace first occurrence
+- replaceAll(old, new): replace all occurrences
+- repeat(n): repeat string n times
+- startsWith(value): check prefix
+- endsWith(value): check suffix
+
+Examples:
+let text = "   Hello JavaScript!   ";
+console.log(text.toUpperCase());        // "   HELLO JAVASCRIPT!   "
+console.log(text.toLowerCase());        // "   hello javascript!   "
+console.log(text.trim());               // "Hello JavaScript!"
+console.log(text.split(" "));           // ["", "", "", "Hello", "JavaScript!"]
+console.log(text.substring(3, 8));      // "Hello"
+console.log(text.slice(-10, -1));       // "JavaScript"
+console.log(text.includes("Java"));     // true
+console.log(text.indexOf("Script"));    // 9
+console.log(text.replace("Java", "Type"));// "   Hello TypeScript!   "
+console.log("ha".repeat(3));            // "hahaha"
+console.log(text.startsWith("   He"));  // true
+console.log(text.endsWith("!   "));     // true
+
+7.4 Template Literals
+- Use backticks (`) for multi-line strings and variable interpolation.
+let name = "Ajay";
+let greeting = `Hello, ${name}! Welcome to JS.`;
+console.log(greeting); // "Hello, Ajay! Welcome to JS."
+
+7.5 String Concatenation
+- Using + operator or template literals.
+let first = "Node";
+let second = "JS";
+console.log(first + " " + second);      // "Node JS"
+console.log(`${first} ${second}`);      // "Node JS"

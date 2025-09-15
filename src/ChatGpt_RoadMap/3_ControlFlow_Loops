@@ -1,0 +1,115 @@
+-------------------------------------------------------------
+SECTION 3: CONTROL FLOW (NODE.JS FOCUSED)
+-------------------------------------------------------------
+
+3.1 Conditional Statements (if, else if, else)
+----------------------------------------------
+Syntax:
+if (condition) {
+   // code if true
+} else if (anotherCondition) {
+   // code if second condition true
+} else {
+   // code if none true
+}
+
+Example:
+let age = 20;
+if (age >= 18) {
+    console.log("Adult");
+} else {
+    console.log("Minor");
+}
+
+-------------------------------------------------------------
+
+3.2 Switch Statement
+--------------------
+- Useful when checking one value against many cases
+- Includes "break" to stop execution
+
+Example:
+let role = "admin";
+switch (role) {
+    case "admin":
+        console.log("Full Access");
+        break;
+    case "editor":
+        console.log("Edit Access");
+        break;
+    case "viewer":
+        console.log("Read-only Access");
+        break;
+    default:
+        console.log("No role assigned");
+}
+
+-------------------------------------------------------------
+
+3.3 Loops
+---------
+for loop:
+for (let i = 0; i < 5; i++) {
+    console.log(i);
+}
+
+while loop:
+let n = 0;
+while (n < 3) {
+    console.log(n);
+    n++;
+}
+
+do...while loop:
+let count = 0;
+do {
+    console.log(count);
+    count++;
+} while (count < 3);
+
+-------------------------------------------------------------
+
+3.4 Loop Control (break, continue)
+----------------------------------
+break → exits loop completely
+continue → skips current iteration and continues
+
+Example:
+for (let i = 1; i <= 5; i++) {
+    if (i === 3) continue;  // skip 3
+    if (i === 5) break;     // stop loop
+    console.log(i);
+}
+// Output: 1, 2, 4
+
+-------------------------------------------------------------
+
+3.5 For-in and For-of
+----------------------
+for-in → iterate over object keys
+for-of → iterate over iterable values (array, string, etc.)
+
+Example with object:
+const user = { name: "Ajay", age: 30 };
+for (let key in user) {
+    console.log(key, user[key]);
+}
+// name Ajay
+// age 30
+
+Example with array:
+const arr = [10, 20, 30];
+for (let val of arr) {
+    console.log(val);
+}
+// 10, 20, 30
+
+-------------------------------------------------------------
+Good Practices
+--------------
+- Use if/else for conditions
+- Use switch when many cases on the same variable
+- Use for-of for arrays/iterables
+- Use for-in for objects (but prefer Object.keys/Object.entries for clarity)
+- Always include "break" in switch cases to avoid fall-through
+-------------------------------------------------------------

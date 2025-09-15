@@ -1,0 +1,133 @@
+-------------------------------------------------------------
+SECTION 1: BASICS OF JAVASCRIPT (NODE.JS FOCUSED)
+-------------------------------------------------------------
+
+1.1 What is JavaScript (JS) and its uses
+---------------------------------------
+- High-level, interpreted scripting language
+- Dynamic and weakly typed (unlike Java)
+- Runs on server (Node.js) and client (browser)
+- Uses in Node.js:
+  - Backend logic, APIs
+  - File handling
+  - Modules and packages
+
+1.2 JS vs Java
+---------------
+- JS is dynamically typed, Java is statically typed
+- JS uses prototype-based OOP, Java uses class-based OOP
+- JS variables are function/block scoped; Java variables have strict type
+- JS supports first-class functions, closures, async programming
+
+1.3 Output in Node.js
+---------------------
+- console.log()  → print messages in terminal / Node REPL
+- Example:
+  console.log("Hello Node.js");
+
+1.4 Comments
+-------------
+- Single-line: // comment
+- Multi-line: /* comment */
+
+1.5 Variables
+-------------
+- var: function-scoped, can be redeclared (avoid in Node)
+- let: block-scoped, can be reassigned
+- const: block-scoped, cannot be reassigned
+
+Examples:
+var a = 10;
+let b = 20;
+const c = 30;
+
+1.6 Data Types
+---------------
+JavaScript has two main categories of data types:
+
+1.6.1 Primitive (single value, immutable):
+-----------------------------------------
+- string   : sequence of characters
+  Example: let name = "Hello";
+
+- number   : integers & decimals (no int/float split like Java)
+  Example: let age = 10;
+           let pi = 3.14;
+
+- boolean  : true / false
+  Example: const isAdmin = false;
+
+- null     : explicitly no value (you assign it on purpose)
+  Example: let emptyValue = null;
+
+- undefined: variable declared but not initialized
+  Example: let notAssigned;
+           console.log(notAssigned); // undefined
+
+- symbol   : unique identifier (often used as object keys)
+  Example: const sym = Symbol("id");
+
+- bigint   : very large integers (beyond Number range)
+  Example: const big = 123456789012345678901234567890n;
+
+1.6.2 Non-primitive (reference types):
+--------------------------------------
+- Object   : collection of key-value pairs
+  Example: const person = { name: "Ajay", age: 30 };
+
+- Array    : special type of object, ordered list
+  Example: let nums = [1, 2, 3];
+
+- Function : also an object type in JS
+  Example: const greet = () => console.log("Hello");
+
+-------------------------------------------------------------
+About var, let, const
+---------------------
+- var
+  * Function-scoped
+  * Can be redeclared and updated
+  * Hoisted (accessible before declaration, but undefined)
+  * Generally avoided in modern JS
+
+- let
+  * Block-scoped
+  * Can be updated, but not redeclared in same scope
+  * Preferred for variables that change
+
+- const
+  * Block-scoped
+  * Cannot be reassigned (value fixed), but object/array
+    properties inside can still be changed
+  * Preferred by default for safer code
+-------------------------------------------------------------
+
+1.7 Type Checking
+-----------------
+- typeof: check data type
+Example:
+let x = 10;
+console.log(typeof x); // number
+
+- instanceof: check if object is instance of class
+console.log(person instanceof Object); // true
+
+1.8 Type Conversion / Coercion
+--------------------------------
+- Explicit conversion:
+let str = String(123);       // "123"
+let num = Number("456");     // 456
+let bool = Boolean(0);       // false
+
+- Automatic coercion:
+console.log("5" + 2);  // "52" (string)
+console.log("5" - 2);  // 3   (number)
+
+1.9 Good Practices
+------------------
+- Use let/const instead of var
+- Use const by default; let only if reassignment needed
+- Prefer explicit type conversion for clarity
+- Focus on Node.js-relevant JS (skip DOM/browser-specific features)
+
+-------------------------------------------------------------

@@ -1,0 +1,69 @@
+6. ARRAYS
+---------
+6.1 Creating Arrays
+- Arrays store ordered collections of values.
+- Can hold different types (numbers, strings, objects, etc.).
+Examples:
+let numbers = [1, 2, 3];
+let fruits = ["apple", "banana"];
+let mixed = [1, "Ajay", true];
+let empty = [];
+
+6.2 Accessing, Updating, Deleting
+let fruits = ["apple", "banana", "cherry"];
+console.log(fruits[0]);      // "apple" (index starts at 0)
+fruits[1] = "mango";         // update index 1
+delete fruits[2];            // removes value but leaves empty slot
+// Good Practice: Use array methods (splice) instead of delete for clean removal.
+
+6.3 Array Methods
+-----------------
+Mutating (changes original array):
+- push(): add element at end
+- pop(): remove last element
+- shift(): remove first element
+- unshift(): add element at start
+- splice(start, deleteCount, ...items): remove/replace/add elements
+- sort(): sorts (alphabetical for strings, ASCII order for numbers)
+- reverse(): reverses the array
+
+Non-mutating (returns new array, does not change original):
+- slice(start, end): returns subarray
+- concat(): joins arrays
+- join(separator): joins into string
+- includes(value): check if exists
+- indexOf(value): index of first occurrence
+- find(fn): first element matching condition
+- filter(fn): all elements matching condition
+- map(fn): transform each element, return new array
+- reduce(fn, initial): reduce to single value
+- forEach(fn): iterate over array (no return)
+
+Examples:
+let arr = [1, 2, 3, 4];
+console.log(arr.slice(1, 3));     // [2,3]
+console.log(arr.concat([5, 6]));  // [1,2,3,4,5,6]
+console.log(arr.join("-"));       // "1-2-3-4"
+console.log(arr.includes(3));     // true
+console.log(arr.indexOf(2));      // 1
+console.log(arr.find(x => x > 2));    // 3
+console.log(arr.filter(x => x % 2 === 0)); // [2,4]
+console.log(arr.map(x => x * 2));  // [2,4,6,8]
+console.log(arr.reduce((sum, x) => sum + x, 0)); // 10
+arr.forEach(x => console.log(x));  // logs 1,2,3,4
+
+6.4 Array Destructuring
+let [a, b] = [10, 20];
+console.log(a); // 10
+console.log(b); // 20
+
+let [first, , third] = [1, 2, 3];
+console.log(first, third); // 1 3
+
+6.5 Nested / Multidimensional Arrays
+let matrix = [
+  [1, 2, 3],
+  [4, 5, 6],
+  [7, 8, 9]
+];
+console.log(matrix[1][2]); // 6

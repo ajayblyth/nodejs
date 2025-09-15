@@ -1,3 +1,27 @@
+promise
+// Step 1: Create a promise
+const myPromise = new Promise((resolve, reject) => {
+    const success = true; // simulate async result
+
+    // Simulate async work with setTimeout
+    setTimeout(() => {
+        if (success) {
+            resolve("Data loaded successfully!"); // promise fulfilled
+        } else {
+            reject("Failed to load data."); // promise rejected
+        }
+    }, 1000);
+});
+
+// Step 2: Consume the promise
+myPromise
+    .then(result => {
+        console.log("Success:", result); // runs if resolved
+    })
+    .catch(error => {
+        console.log("Error:", error); // runs if rejected
+    });
+
 -------------------------------------------------------------
 NODE.JS: EVENT LOOP, ASYNC PATTERNS & EVENTS GUIDE
 -------------------------------------------------------------
