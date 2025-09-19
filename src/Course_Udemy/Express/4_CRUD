@@ -1,0 +1,279 @@
+TOPIC: HTTP Methods in Express
+
+1) Introduction:
+   - GET → default browser method → used to read data.
+   - POST → insert data (example: add an order).
+   - PUT → update data.
+   - DELETE → remove data.
+   - Note: In this example, **data is not persisted** (no database).
+   - Rationale: Using file system is optional, but mostly devs will use a DB anyway.
+
+2) Data Setup (data.js):
+   const people = [
+     { id: 1, name: 'John' },
+     { id: 2, name: 'Jane' },
+     { id: 3, name: 'Jack' },
+     { id: 4, name: 'Jill' }
+   ];
+   module.exports = { people };
+
+3) Importing Data in app.js:
+   - Use `let` to allow modification of array later.
+   let { people } = require('./data');
+
+4) GET Method – Read Data (app.js):
+   app.get('/api/people', (req, res) => {
+     res.status(200).json({
+       success: true,   // indicates request success
+       data: people     // returns current array
+     });
+   });
+
+5) Browser/Test:
+   - URL: http://localhost:5000/api/people
+   - Response:
+     {
+       "success": true,
+       "data": [
+         { "id": 1, "name": "John" },
+         { "id": 2, "name": "Jane" },
+         { "id": 3, "name": "Jack" },
+         { "id": 4, "name": "Jill" }
+       ]
+     }
+   - Default GET method in browser returns this.
+   - Accessing homepage without route → "Cannot GET /" → 404.
+
+6) Notes / Teacher’s Insights:
+   - Browser always performs GET by default.
+   - Each route is exact → must request `/api/people`.
+   - Status code 200 → request successful.
+   - Structured JSON response recommended (`success`, `data`).
+   - `people` array is **in-memory**, not persisted to DB yet.
+   - Later methods (POST, PUT, DELETE) will modify this array in-memory.
+   - This is the foundation for learning RESTful APIs in Express.
+-------------------------------------------------------------------
+
+
+TOPIC: POST Method in Express (Adding Data)
+
+1) Introduction:
+   - GET → read data (default browser method)
+   - POST → insert/add data onto the server
+   - Browser cannot natively make POST requests
+     → need tools like **Postman**, **Insomnia**, or a frontend app.
+   - Two flavors for POST requests will be demonstrated:
+     1) Traditional HTML form submission
+     2) Using JavaScript fetch/AJAX requests
+
+2) Preparing Static Assets for Testing:
+   - Create folder: methods.public
+   - Add files:
+     - index.html
+     - JavaScript, HTML, CSS as needed
+   - Purpose: frontend form/app to test POST requests
+
+3) Setting Up Static Folder in Express (app.js):
+   // Assets – serve static files
+   app.use(express.static('./methods.public'));
+
+   - Explanation:
+     - `app.use` → built-in middleware to serve static assets
+     - Path points to folder with HTML, JS, CSS
+     - Browser can now load index.html and JS app
+     - Enables testing of POST requests without configuring browser manually
+
+4) Testing POST Requests:
+   - Option 1: HTML Form in methods.public
+     - Traditional method
+     - User submits form → sends POST request to server
+   - Option 2: JavaScript fetch/AJAX
+     - Modern approach
+     - Sends POST request programmatically
+   - Alternative: Use **Postman** or **Insomnia**
+     - Allows direct testing of server endpoints
+     - Helpful before frontend is ready
+
+5) Next Steps:
+   - Install additional tools for faster testing:
+     - Postman (npm not required, standalone app)
+   - Once static folder is ready:
+     - Navigate to homepage (`localhost:5000` or relevant port)
+     - HTML app should load without errors
+     - Forms and JS can now send POST requests to server
+-----------------------------------------------------------------
+
+TOPIC: Handling POST Requests from HTML Forms
+
+1) HTML Form Setup (index.html):
+   - Typical form with two attributes:
+     1) method="POST" → indicates POST request
+     2) action="/login" → path on the server to send data
+   - Input field:
+     - name="name"
+     - id="name"
+     - autocomplete attribute
+   - Submit button triggers POST request
+
+2) Observing Form POST Requests:
+   - When submitting form (e.g., name=John):
+     - Browser sends POST request to /login
+     - HTTP method is POST (not GET)
+     - Body contains key-value pair:
+       - key: name
+       - value: John
+   - GET requests don’t have body; POST requests include body
+
+3) Creating Server Route for POST (/login):
+   // app.js
+   app.post('/login', (req, res) => {
+       res.send('POST');
+   });
+   - Initially:
+     - Server responds with 'POST'
+     - Cannot access submitted data yet (req.body is undefined)
+
+4) Middleware for Parsing Form Data:
+   - Express built-in middleware: URL-encoded parser
+   - Adds submitted form data to req.body
+   // app.js
+   app.use(express.urlencoded({ extended: false }));
+
+   - extended: false → parse URL-encoded data using querystring library
+   - extended: true → uses qs library (optional, more advanced)
+   - Now req.body contains key-value pairs from form submission
+
+5) Handling Submitted Data:
+   // app.js
+   app.post('/login', (req, res) => {
+       const { name } = req.body;
+
+       if (name) {
+           // Success response
+           return res.status(200).send(`Welcome ${name}`);
+       } else {
+           // Empty input
+           return res.status(401).send('Please provide credentials');
+       }
+   });
+
+   - Example workflow:
+     1) User submits "Anna" → response: Welcome Anna (200)
+     2) User submits empty → response: Please provide credentials (401)
+
+6) Key Points:
+   - Form submission uses action to define path on server
+   - POST method includes body; GET does not
+   - req.body is undefined without URL-encoded middleware
+   - Middleware is applied globally via app.use()
+   - This example demonstrates basic server-side validation
+   - Works if frontend and server are on the same host:
+     - action="/login" refers to same server
+   - For separate frontend, provide full URL for action
+
+7) Next Steps:
+   - First flavor of POST request handled (HTML form)
+   - Second flavor: POST via JavaScript (fetch/AJAX)
+   - Will demonstrate how to manipulate server-side data arrays
+-------------------------------------------------------------
+
+TOPIC: Handling POST Requests from JavaScript using Axios
+
+1) Background:
+   - Browser form POST (application/x-www-form-urlencoded) differs from JavaScript POST (application/json)
+   - JavaScript approach allows sending HTTP requests programmatically
+   - Front-end JavaScript can dynamically update the page without full reload
+
+2) Front-End Setup:
+   - index.html:
+       - No action or method attributes on form
+       - Input field: name="name"
+       - Div/element to display results (alert/result)
+   - Include Axios via CDN for easier HTTP requests
+       <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+   - Example of fetching people from server:
+       function fetchPeople() {
+           axios.get('/api/people')
+               .then(res => {
+                   // iterate res.data.data array
+                   // display people on page
+               })
+               .catch(err => console.log("Can't fetch data"));
+       }
+       fetchPeople();
+
+3) Sending POST Request via JavaScript (Axios):
+   - Capture form submit event
+   - Extract input value
+   - Send POST request to server:
+       const name = input.value;
+       axios.post('/api/people', { name })
+           .then(res => {
+               // res.data contains server response
+               // dynamically add new person to front-end list
+           })
+           .catch(err => {
+               // handle errors
+               // e.g., if name empty, show error message
+           });
+
+4) Server-Side Setup:
+   - Separate route for POST (even if URL same as GET)
+       app.post('/api/people', (req, res) => { ... });
+   - Middleware required:
+       1) Parse URL-encoded data (for forms):
+           app.use(express.urlencoded({ extended: false }));
+       2) Parse JSON data (for JavaScript/Axios):
+           app.use(express.json());
+
+5) Handling Data on Server:
+   // app.js
+   app.post('/api/people', (req, res) => {
+       const { name } = req.body;
+
+       if (!name) {
+           // Missing name, send 400 error
+           return res.status(400).json({
+               success: false,
+               message: 'Please provide name value'
+           });
+       }
+
+       // Success, send new person back
+       res.status(201).json({
+           success: true,
+           person: name
+       });
+   });
+
+6) Key Notes:
+   - POST method differs from GET even if URL is same
+       - GET: reading data
+       - POST: adding data
+   - req.body populated only with appropriate middleware
+       - express.urlencoded() for form submissions
+       - express.json() for JSON payloads
+   - Axios automatically sets Content-Type to application/json
+   - Response structure should match front-end expectations:
+       - success: boolean
+       - data/person/message properties
+   - Status codes:
+       - 201 → successfully created
+       - 400 → bad request (e.g., missing value)
+
+7) Front-End Handling of Response:
+   - On success:
+       - Access data via res.data.person
+       - Dynamically add to HTML list
+   - On error:
+       - Access error.response.data.message
+       - Display error alert
+   - Helps keep UI in sync with server-side changes
+
+8) Summary:
+   - Two flavors of POST requests:
+       1) HTML Form (URL-encoded)
+       2) JavaScript (JSON/Axios)
+   - Middleware ensures req.body populated correctly
+   - Response JSON used to update front-end dynamically
+   - Enables future manipulation with PUT/DELETE/POST methods

@@ -1,0 +1,434 @@
+----------------------------------------------------------
+73 - Middleware Setup
+
+TOPIC: Middleware in Express.js
+--------------------------------
+
+1. Definition:
+   - Middleware = functions that execute during the request–response cycle.
+   - Each middleware has access to req, res, and next.
+   - Express apps = essentially a chain of middleware functions.
+   - Request flow:
+       Request --> [Middleware(s)] --> Response
+   - Middleware can:
+       • console.log info
+       • modify data
+       • terminate response
+       • forward to next middleware
+
+----------------------------------------------------------
+FULL EXAMPLE WITH EXPLANATION
+----------------------------------------------------------
+const express = require('express')
+const app = express()
+
+// Middleware function
+const logger = (req, res, next) => {
+  const method = req.method
+  const url = req.url
+  const time = new Date().getFullYear()
+  console.log(method, url, time)   // log request details
+  next()                           // pass control to next handler
+}
+
+// Routes using middleware
+app.get('/', logger, (req, res) => {
+  res.send('Home')                 // middleware runs first, then this executes
+})
+
+app.get('/about', logger, (req, res) => {
+  res.send('About')                // same flow here
+})
+
+app.listen(5001, () => {
+  console.log('Server is listening on port 5001....')
+})
+
+----------------------------------------------------------
+Explanation of Code Flow
+----------------------------------------------------------
+- Server starts on port 5001.
+- For each incoming request:
+    1. Middleware `logger` runs.
+       • Extracts req.method, req.url, year.
+       • Logs them to console.
+       • Calls next() → forwards request.
+    2. After next(), route handler runs:
+       • GET '/'   → responds with "Home".
+       • GET '/about' → responds with "About".
+- If `next()` were missing, request would hang forever.
+- Middleware can also terminate early by sending response
+  (e.g., res.send("Testing")) instead of calling next().
+
+----------------------------------------------------------
+Example Run
+----------------------------------------------------------
+- Request → GET /
+  Console → "GET / 2021"
+  Browser → "Home"
+
+- Request → GET /about
+  Console → "GET /about 2021"
+  Browser → "About"
+
+----------------------------------------------------------
+Takeaway
+----------------------------------------------------------
+- Middleware is central to Express.
+- Always either send a response OR call next().
+- Helps avoid code duplication (e.g., logging logic).
+- Reusable, selective, and powerful for logging,
+  authentication, modification, or blocking access.
+
+
+----------------------------------------------------------
+74 - Organizing Middleware & Applying Globally
+
+TOPIC: Middleware Organization in Express.js
+--------------------------------------------
+
+1. Issues with Current Setup:
+   - app.js is getting clunky (logger + routes mixed).
+   - Manually adding logger to many routes (e.g., 50+) is inefficient.
+
+----------------------------------------------------------
+SOLUTION PART 1: Move Logger to Separate File
+----------------------------------------------------------
+1. Create logger.js:
+   const logger = (req, res, next) => {
+     const method = req.method
+     const url = req.url
+     const time = new Date().getFullYear()
+     console.log(method, url, time)
+     next()
+   }
+   module.exports = logger
+
+2. In app.js:
+   const express = require('express')
+   const app = express()
+   const logger = require('./logger')
+
+   app.listen(5000, () => {
+     console.log('Server is listening on port 5000...')
+   })
+
+- Benefit: Keeps app.js lean and maintainable.
+- Test: Navigate to localhost:5000 → logs appear in console.
+
+----------------------------------------------------------
+SOLUTION PART 2: Apply Middleware Globally with app.use()
+----------------------------------------------------------
+1. Instead of attaching logger manually:
+   app.get('/', logger, (req,res)=>{res.send('Home')})
+   app.get('/about', logger, (req,res)=>{res.send('About')})
+   app.get('/api/products', logger, ...)
+   app.get('/api/items', logger, ...)
+
+   (This is repetitive for many routes.)
+
+2. Better approach:
+   app.use(logger)
+
+   - Now logger runs for ALL routes automatically.
+
+----------------------------------------------------------
+CODE: Global Middleware Setup
+----------------------------------------------------------
+const express = require('express')
+const app = express()
+const logger = require('./logger')
+
+// apply middleware globally
+app.use(logger)
+
+app.get('/', (req, res) => {
+  res.send('Home')
+})
+
+app.get('/about', (req, res) => {
+  res.send('About')
+})
+
+app.get('/api/products', (req, res) => {
+  res.send('Products')
+})
+
+app.get('/api/items', (req, res) => {
+  res.send('Items')
+})
+
+app.listen(5000, () => {
+  console.log('Server is listening on port 5000...')
+})
+
+----------------------------------------------------------
+IMPORTANT NOTES ABOUT app.use()
+----------------------------------------------------------
+1. Order Matters:
+   - Middleware executes in order of definition.
+   - If app.get('/') comes before app.use(logger),
+     then logger won’t run for '/'.
+   - Convention: Place app.use() calls at the top,
+     before route handlers.
+
+2. Path Parameter Option:
+   - Syntax: app.use('/api', logger)
+   - Middleware applies only to routes starting with '/api':
+       • /api/products
+       • /api/items
+       • /api/home/about/products
+   - Path acts as “base,” logger runs for all routes under it.
+   - If no path given → applies to ALL requests.
+
+----------------------------------------------------------
+REFERENCE (from Express docs):
+----------------------------------------------------------
+- app.use mounts specified middleware function(s) at given path.
+- Middleware runs when base of request path matches.
+- Omitting path → applies to every request.
+
+----------------------------------------------------------
+Takeaway
+----------------------------------------------------------
+- Move reusable middleware (like logger) to separate files.
+- Use app.use() for global or path-specific middleware.
+- Always define middleware BEFORE routes.
+- Path option helps apply middleware only to certain groups (e.g. '/api').
+
+----------------------------------------------------------
+⚠️ INFORMATION ALERT
+----------------------------------------------------------
+- Middleware organization prevents messy app.js.
+- app.use() makes middleware reusable & global.
+
+--------------------------------------------------------------
+
+74 - Adding Multiple Middleware (logger + authorize)
+
+TOPIC: app.use with multiple middleware functions
+-------------------------------------------------
+
+1. Goal:
+   - Extend example by adding another middleware function.
+   - Learn:
+     • How to execute multiple middleware in app.use
+     • Syntax for multiple middleware
+     • Execution order
+
+2. Step 1: Create authorize.js
+   const authorize = (req, res, next) => {
+     console.log('authorize');
+     next();
+   };
+
+   module.exports = authorize;
+
+   - Similar to logger.js (req, res, next).
+   - For now, just logs and calls next().
+
+3. Step 2: Use in app.js
+   const express = require('express');
+   const app = express();
+   const logger = require('./logger');
+   const authorize = require('./authorize');
+
+   // Apply multiple middleware in app.use
+   app.use([logger, authorize]);
+
+   app.get('/', (req,res) => {
+     res.send('Home');
+   });
+
+   app.get('/about', (req,res) => {
+     res.send('About');
+   });
+
+   app.get('/api/products', (req,res) => {
+     res.send('Products');
+   });
+
+   app.get('/api/items', (req,res) => {
+     console.log(req.user);
+     res.send('Items');
+   });
+
+   app.listen(5000, () => {
+     console.log('Server is listening on port 5000...');
+   });
+
+   - Middleware in array: [logger, authorize]
+   - Execution order matters:
+       • [logger, authorize] → console shows GET then "authorize"
+       • [authorize, logger] → console shows "authorize" then GET
+
+4. Step 3: Add Conditional Logic in authorize.js
+   const authorize = (req, res, next) => {
+     const { user } = req.query;
+     if (user === 'John') {
+       req.user = { name: 'John', id: 3 };
+       next();   // allow to proceed
+     } else {
+       res.status(401).send('Unauthorized');
+     }
+   };
+
+   module.exports = authorize;
+
+   - Looks for query parameter: ?user=John
+   - If condition met:
+       • Attaches req.user = { name: 'John', id: 3 }
+       • Calls next()
+   - Else:
+       • Response: 401 Unauthorized
+
+5. Behavior in Browser:
+   - Visit http://localhost:5000/
+       → Unauthorized (401)
+   - Visit http://localhost:5000/?user=John
+       → Page loads (Home/About/etc.)
+       → Console shows req.user object
+
+6. Why Powerful:
+   - Middleware can:
+       • Check conditions (auth, logging, etc.)
+       • Modify req/res
+       • Block unauthorized access
+       • Attach extra data (like req.user)
+   - In routes, we can now access req.user anywhere.
+   - Example (in /api/items):
+       console.log(req.user) → { name: 'John', id: 3 }
+
+7. Important Notes:
+   - This is DEMO ONLY (using query string).
+   - Real apps use JSON Web Token (JWT) + DB lookup.
+   - Middleware = Lego blocks → combine logger + authorize
+     to build structured Express apps.
+
+------------------------------------------------------------
+TAKEAWAY:
+- Multiple middleware can be chained with app.use([..]).
+- Execution order matters.
+- Middleware can terminate OR forward request.
+- Middleware can enrich req object (e.g., req.user).
+- Express apps = flexible chain of middleware functions.
+------------------------------------------------------------
+1) Middleware is everywhere in Express.
+   - Even after "intro to middleware", we will keep seeing it.
+   - Custom middleware, built-in middleware, third-party middleware.
+
+2) Do we add middleware in routes?
+   - Yes. Example: only /api/items needs authorization.
+   - Add middleware in route definition:
+
+     app.get('/api/items', [logger, authorize], (req,res)=> {
+         res.send('Items Page');
+     });
+
+   - Logger + authorize run in sequence.
+   - Other routes (like "/") are unaffected.
+
+3) Multiple middleware in a single route:
+   - Pass them as array [logger, authorize].
+   - They run in order.
+   - If condition fails (e.g., user !== John), response ends.
+
+4) Middleware types:
+   (a) Custom Middleware (ours)
+   (b) Express Built-in Middleware
+   (c) Third-party Middleware (npm packages)
+
+5) Built-in Middleware Example:
+   - app.use(express.static('./public'))
+   - Serves all files in "public" folder as static assets.
+
+6) Third-party Middleware Example: Morgan
+   - Popular HTTP request logger.
+   - Install: npm i morgan
+   - Require: const morgan = require('morgan');
+   - Use: app.use(morgan('tiny'));
+   - Console Output Example:
+
+     GET / 200 2.8 ms
+     GET /about 200 3.1 ms
+
+7) Custom Middleware Example: Logger & Authorize
+
+   - logger: logs every request
+   - authorize: checks query string ?user=john
+     → adds req.user object if valid
+     → sends 401 Unauthorized if missing/invalid
+
+8) Final takeaways:
+   - Middleware is central to Express apps.
+   - You can combine multiple middlewares.
+   - Bigger apps = more middleware usage.
+   - Order matters: top-down execution.
+   - Logger, authorization, static assets, and Morgan can co-exist.
+
+
+const express = require('express');
+const app = express();
+const morgan = require('morgan');
+
+// -------------------- Custom Middleware --------------------
+const logger = (req, res, next) => {
+  console.log('Logger Middleware');
+  next();
+};
+
+const authorize = (req, res, next) => {
+  const { user } = req.query;
+  if (user === 'john') {
+    // Attaching user object to request
+    req.user = { name: 'John', id: 3 };
+    next();
+  } else {
+    res.status(401).send('Unauthorized');
+  }
+};
+
+// -------------------- Built-in Middleware --------------------
+app.use(express.static('./public'));  // serves static files
+
+// -------------------- Third-party Middleware --------------------
+app.use(morgan('tiny'));  // logs request info
+
+// -------------------- Routes --------------------
+app.get('/', (req, res) => {
+  res.send('Home Page');
+});
+
+app.get('/about', (req, res) => {
+  res.send('About Page');
+});
+
+// Route with multiple middleware
+app.get('/api/items', [logger, authorize], (req, res) => {
+  console.log(req.user);  // { name: 'John', id: 3 }
+  res.send('Items Page');
+});
+
+app.listen(5000, () => {
+  console.log('Server running on port 5000...');
+});
+
+ 1) Visiting localhost:5000/
+    Console:
+    GET / 200 2.8 ms
+
+ 2) Visiting localhost:5000/about
+    Console:
+    GET /about 200 3.1 ms
+
+ 3) Visiting localhost:5000/api/items (no query)
+    Console:
+    Unauthorized
+    Browser shows 401 Unauthorized
+
+ 4) Visiting localhost:5000/api/items?user=john
+    Console:
+    Logger Middleware
+    { name: 'John', id: 3 }
+    Browser shows "Items Page"
+

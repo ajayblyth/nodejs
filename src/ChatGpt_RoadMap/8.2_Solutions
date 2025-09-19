@@ -7,6 +7,11 @@ SOLUTIONS – OBJECTS
 let car = { brand: "Toyota", model: "Corolla", year: 2020 };
 console.log(car);
 
+let city ={ name: "jammu",  state : "j&k", pincode: 181123};
+console.log(city);
+
+console.log(city.name);
+
 -------------------------------------------------------------
 2. Access properties
 --------------------

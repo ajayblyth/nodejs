@@ -1,0 +1,596 @@
+-------------------------------------------------------------
+EXPRESS LIBRARY BASICS - SERVER SETUP & ROUTING
+-------------------------------------------------------------
+
+1. Introduction
+   - Express simplifies server creation vs Node's HTTP module.
+   - Less code, easier routing, middleware handling.
+
+2. Setting Up Express
+   - Import & create app instance:
+       const express = require('express');
+       const app = express();
+   - express() returns a server instance with useful methods.
+
+3. Important Express Methods
+   - HTTP verbs: app.get, app.post, app.put, app.delete (handles respective requests)
+   - app.all(path, callback) → handles all HTTP methods
+   - app.use(middleware) → handles middleware
+   - app.listen(port, callback) → starts server
+
+4. Server Example
+   const express = require('express');
+   const app = express();
+
+   app.listen(5000, () => {
+       console.log('Server listening on port 5000');
+   });
+   - Port hard-coded for now; can be made dynamic later
+
+5. Routing & Status Codes
+   - Home Page (GET '/'):
+       app.get('/', (req, res) => {
+           res.status(200).send('<h1>Home Page</h1>');
+       });
+   - About Page (GET '/about'):
+       app.get('/about', (req, res) => {
+           res.status(200).send('About Page');
+       });
+   - 404 - Resource Not Found (all other paths):
+       app.all('*', (req, res) => {
+           res.status(404).send('<h1>Resource Not Found</h1>');
+       });
+   - Explicit status codes preferred: 200 → success, 404 → not found
+
+6. Summary
+   - Express reduces boilerplate code.
+   - Provides easy routing, HTTP method handling, server setup.
+   - Middleware handled via app.use (detailed later).
+   - Example covers: GET routes, custom 404, explicit status codes.
+
+-------------------------------------------------------------
+FULL EXAMPLE CODE
+-------------------------------------------------------------
+const express = require('express');
+const app = express();
+
+// Home Page
+app.get('/', (req, res) => {
+    res.status(200).send('<h1>Home Page</h1>');
+});
+
+// About Page
+app.get('/about', (req, res) => {
+    res.status(200).send('About Page');
+});
+
+// 404 Handler
+app.all('*', (req, res) => {
+    res.status(404).send('<h1>Resource Not Found</h1>');
+});
+
+// Start Server
+app.listen(5000, () => {
+    console.log('Server listening on port 5000');
+});
+-------------------------------------------------------------
+64, express app example
+
+-------------------------------------------------------------
+EXPRESS - NAV BAR APP & STATIC ASSETS
+-------------------------------------------------------------
+
+1. Introduction
+   - Next example: Nav Bar app
+   - Approach is flexible:
+       - Can reuse previous routes (app.get/app.all) or start fresh
+       - Re-typing helps remember concepts better
+
+2. Setting Up Express
+   - Import & create app instance:
+       const express = require('express');
+       const app = express();
+   - Start server:
+       app.listen(5000, () => {
+           console.log('Server is listening on port 5000...');
+       });
+
+3. Basic Routing
+   - Home Page (GET '/'):
+       app.get('/', (req, res) => {
+           // Will send index.html file later
+       });
+   - 404 - Resource Not Found (all other paths):
+       app.all('*', (req, res) => {
+           res.status(404).send('Resource not found');
+       });
+
+4. Sending HTML Files
+   - Use `res.sendFile()` to send files
+   - Requires **absolute path** → use Node's path module
+       const path = require('path');
+
+   - Example for sending index.html:
+       app.get('/', (req, res) => {
+           res.sendFile(path.resolve(__dirname, './navbar-app/index.html'));
+       });
+   - path.resolve + __dirname ensures absolute path
+   - Alternative: path.join can also be used
+
+5. Serving Static Assets
+   - Problem: CSS, JS, images not loading
+   - Solution: Use built-in middleware express.static
+       app.use(express.static('./public'));
+   - Steps:
+       1. Create folder named `public` (common convention)
+       2. Place all static resources (CSS, JS, images) there
+       3. Express automatically serves these files
+   - Benefits:
+       - No need to manually create routes for each file
+       - Express handles:
+           - Path resolution
+           - MIME types
+           - Status codes
+   - Example: browser-app.js, logo.svg, styles.css → put inside `public`
+
+6. Static vs Dynamic Assets
+   - **Static assets**: Files that do not change on server (HTML, CSS, JS, images)
+       - Server sends them as-is
+   - **Dynamic assets**: Server modifies content before sending (e.g., templates showing user-specific data)
+       - Achieved using template engines or server-side rendering
+   - Example:
+       - Index.html and JS in browser are static
+       - JS makes browser app dynamic client-side
+       - Server does not modify static assets
+
+7. Summary
+   - Express simplifies serving HTML and static files
+   - Middleware `app.use(express.static('folder'))` handles static assets
+   - Sending files with `res.sendFile()` requires absolute path
+   - Static assets: files server does not modify
+   - Dynamic content requires server-side rendering (template engines)
+
+-------------------------------------------------------------
+FULL EXAMPLE CODE
+-------------------------------------------------------------
+const express = require('express');
+const path = require('path');
+const app = express();
+
+// Setup static folder
+app.use(express.static('./public'));
+
+// Home Page - send index.html
+app.get('/', (req, res) => {
+    res.sendFile(path.resolve(__dirname, './navbar-app/index.html'));
+});
+
+// 404 - Resource Not Found
+app.all('*', (req, res) => {
+    res.status(404).send('Resource not found');
+});
+
+// Start Server
+app.listen(5000, () => {
+    console.log('Server is listening on port 5000...');
+});
+-------------------------------------------------------------
+65-express all static
+
+-------------------------------------------------------------
+EXPRESS - INDEX.HTML AS STATIC ASSET
+-------------------------------------------------------------
+
+1. Question: Is index.html a static asset?
+   - YES → HTML file does not change on server side.
+   - Instead of sending index.html via res.sendFile(),
+     we can just move/copy it to the public folder.
+   - Express will automatically serve it as default file.
+
+2. Why not use res.sendFile() for index.html?
+   - Option 1 (Preferred for simple sites):
+       - Place index.html in `public` with other static assets.
+       - express.static middleware will auto-serve it at root.
+   - Option 2 (For dynamic sites):
+       - Use server-side rendering with template engines.
+   - res.sendFile() is valid, but not typical for index.html.
+
+3. Steps to Serve index.html as Static Asset
+   - Create/copy index.html into `public` folder.
+   - Ensure middleware is set up:
+       app.use(express.static('./public'));
+   - Express will:
+       - Serve index.html automatically on root ('/')
+       - Load linked static files (CSS, JS, images)
+       - Handle everything without extra routes
+
+4. Example
+   const express = require('express');
+   const app = express();
+
+   // Serve all static assets (including index.html)
+   app.use(express.static('./public'));
+
+   // 404 - Resource Not Found
+   app.all('*', (req, res) => {
+       res.status(404).send('Resource not found');
+   });
+
+   // Start Server
+   app.listen(5000, () => {
+       console.log('Server is listening on port 5000...');
+   });
+
+5. How It Works
+   - By default:
+       - User visits `/` → Express serves index.html
+   - index.html already links CSS, JS, images
+   - Browser loads them from `/public`
+   - No extra route setup needed
+   - Network tab shows: HTML + CSS + JS + logo load correctly
+
+6. Summary
+   - Index.html is also a static asset
+   - No need for res.sendFile() for home page
+   - Two main approaches for HTML pages:
+       1. Static assets (public folder)
+       2. Server-side rendering (template engines)
+   - For static sites: dump all files in public → Express serves them
+   - Still keep 404 handler for missing routes
+-------------------------------------------------------------
+66 api vs ssr
+
+-------------------------------------------------------------
+EXPRESS - API vs SERVER-SIDE RENDERING (SSR)
+-------------------------------------------------------------
+
+1. Express Flavors
+   - Two main use cases:
+       1. **API** → Server provides data (usually JSON)
+           - Front-end (React, Vanilla JS, etc.) fetches this data via HTTP
+           - Example: res.json(data)
+       2. **Server-Side Rendering (SSR)** → Server provides full HTML/CSS/JS
+           - Example: res.render(template, data)
+
+2. API (Application Programming Interface)
+   - In Express, API = HTTP Interface to interact with data
+   - Data exchange format: **JSON** (JavaScript Object Notation)
+   - Express helper: res.json()
+       - Sets Content-Type = application/json
+       - Converts JS objects/arrays → JSON string
+   - Real world:
+       - Front-end sends HTTP request
+       - Back-end responds with JSON
+       - Example: Course-API.com/react-tabs-project → returns JSON data
+       - Header shows → Content-Type: application/json
+
+3. Server-Side Rendering (SSR)
+   - Server builds HTML response with templates
+   - Express helper: res.render()
+   - Sends entire page with HTML, CSS, JS
+   - More overhead while learning basics → covered later
+
+4. Why Start with API?
+   - APIs focus on **Express concepts** (routes, middleware, responses)
+   - SSR adds extra complexity (template engines, rendering)
+   - If you understand APIs → applying the same concepts to SSR is easy
+   - Real-world relevance: APIs power modern frontend apps (React, Angular, Vue, Vanilla JS)
+
+5. Real-World Example
+   - Server hosts data in JSON
+   - Frontend project fetches it:
+       - Example: Tabs Project (React)
+       - API endpoint: Course-API.com/react-tabs-project
+       - Frontend fetches JSON → builds UI dynamically
+   - Network Tab in browser confirms:
+       - Response = JSON
+       - Response Headers → Content-Type: application/json
+
+6. Key Takeaways
+   - Express has two major flavors: **API** and **SSR**
+   - API uses res.json() → returns JSON (data only)
+   - SSR uses res.render() → returns full HTML (template-based)
+   - We will focus on **API approach first**
+   - Responsibility shift:
+       - Frontend handles UI & logic
+       - Backend (our server) handles data responses
+-------------------------------------------------------------
+67- json basics
+
+-------------------------------------------------------------
+EXPRESS - BASIC JSON RESPONSE
+-------------------------------------------------------------
+
+1. Two Options in Express
+   - Send JSON data (API)
+   - Send HTML via Server Side Rendering (SSR)
+   - This section → focus on JSON (API)
+
+2. Example Goal
+   - Mimic Course API (e.g., Tours Project)
+   - Server sends JSON (array of objects)
+   - Any frontend (React, Vanilla JS, Svelte, etc.) can fetch this data
+
+3. Setup (from scratch)
+   const express = require('express');
+   const app = express();
+
+   app.listen(5000, () => {
+     console.log("Server listening on port 5000");
+   });
+
+   // Root route - basic JSON response
+   app.get('/', (req, res) => {
+     res.json([
+       { name: "john" },
+       { name: "susan" }
+     ]);
+   });
+
+   - res.json():
+       * Converts data to JSON string
+       * Sets proper Content-Type = application/json
+       * Works with object, array, string, etc.
+
+   - Status codes can be added (e.g., res.status(200).json(...))
+     but skipped here for brevity
+
+4. Using External Data
+   - data.js contains arrays: products[], people[]
+   - Exported as module.exports = { products, people }
+   - Import in app.js:
+
+       const { products } = require('./data');
+
+   - Replace hardcoded response with:
+       app.get('/', (req, res) => {
+         res.json(products);
+       });
+
+   - Now API returns meaningful JSON (list of products)
+
+5. Verification
+   - Open browser → localhost:5000
+   - Response: JSON array of products
+   - Network tab → Content-Type = application/json
+
+6. Notes
+   - Later: will use database (instead of static file)
+   - CORS errors may appear when accessing externally → solved with middleware later
+   - For now: server simply shares data, any frontend can consume
+
+-------------------------------------------------------------
+SUMMARY
+-------------------------------------------------------------
+- res.json() sends JSON with correct headers.
+- Start simple (hardcoded array), then use real data (products).
+- API responses can be consumed by any frontend framework.
+- Status codes & middleware (like CORS) will be added later.
+
+----------------------------------------------------------------
+68 - param, query-string
+
+-------------------------------------------------------------
+EXPRESS - ROUTE SETUP & PARTIAL JSON RESPONSE
+-------------------------------------------------------------
+
+1. Homepage Route
+   - Instead of JSON, send HTML string with res.send():
+       app.get('/', (req, res) => {
+         res.send(`
+           <h1>Home Page</h1>
+           <a href="/api/products">products</a>
+         `);
+       });
+   - Browser → localhost:5000 → shows "Home Page" with link.
+   - Clicking link → /api/products → currently gives 404.
+
+2. Handling /api/products Route
+   - Default 404 shows: "Cannot GET /api/products"
+   - Fix by creating route:
+       app.get('/api/products', (req, res) => {
+         res.json(products);
+       });
+
+3. Realistic API Response
+   - Full product objects often contain many fields
+     (id, name, price, image, description, reviews, stars, etc.)
+   - Best practice:
+     * When returning a **collection** → send minimal info only.
+     * Fetch **detailed info** separately for single product.
+   - Example (React E-commerce project):
+     * Products page: fetch id, name, price, image
+     * Product details page: fetch description, reviews, availability, etc.
+
+4. Filtering Product Data
+   - Use Array.map() + destructuring:
+       app.get('/api/products', (req, res) => {
+         const newProducts = products.map((product) => {
+           const { id, name, image } = product;
+           return { id, name, image };
+         });
+         res.json(newProducts);
+       });
+
+   - Now response = array of objects with only id, name, image.
+   - More efficient & closer to real-world API design.
+
+5. Verification
+   - Browser → /api/products → returns filtered JSON.
+   - Network tab → confirms response is JSON with minimal fields.
+
+-------------------------------------------------------------
+SUMMARY
+-------------------------------------------------------------
+- Home route → simple HTML + link to /api/products.
+- /api/products → returns JSON.
+- API best practice:
+  * Collections → minimal info.
+  * Single item → full details.
+- Implemented by mapping products array
+  and sending only { id, name, image }.
+- Prepares for next step: **URL parameters** for single product.
+
+-------------------------------------------------------------
+EXPRESS - COMPLEX ROUTE PARAMETERS
+-------------------------------------------------------------
+
+1. Route Parameters Can Be Nested
+   - Example: app.get('/api/product/:productID/reviews/:reviewID', ...)
+   - Here:
+       :productID → dynamic placeholder (e.g. 123, abc)
+       :reviewID  → dynamic placeholder (e.g. xyz, 45)
+
+2. Usage
+   - req.params → contains all URL parameters as key-value pairs
+   - Example call: /api/product/abc/reviews/xyz
+     req.params = { productID: "abc", reviewID: "xyz" }
+
+3. Hardcoded Segments
+   - "reviews" in the route is fixed text.
+   - Must match exactly → /reviews/ works
+   - If changed to /review/ → route not found (404)
+
+4. Key Takeaways
+   - Route params can handle multiple dynamic values.
+   - They allow building RESTful routes for resources and sub-resources.
+   - Important distinction: placeholders (":param") are dynamic,
+     while other parts of the path must be exact.
+==================================================================================
+
+71- Query - String
+
+TOPIC: Query String Parameters in Express.js
+--------------------------------------------
+
+1. Definition:
+   - Query string params (aka URL params) let us send small amounts
+     of info to the server using the URL.
+   - Commonly used for filtering, searching, pagination, etc.
+   - The server defines which keys are valid; random keys are ignored.
+
+2. Real-World Example: Hacker News Algolia API
+   - Typical URL format: domain + API path + version + resource.
+     Example: https://algolia.com/api/v1/items/:id
+   - Supports route params:
+       /items/:id
+       /users/:id
+   - Supports query params:
+       ?query=foo&tags=story
+       ?page=2&hitsPerPage=20
+   - Keys must match what server expects. Example:
+       ?chocolate=milkshake  → ignored if not predefined.
+
+3. Syntax Recap:
+   - Everything after "?" in URL = query string.
+   - Format: ?key=value&key2=value2...
+   - Multiple params joined using "&".
+
+4. Express Setup:
+   - Create route with versioning:
+       app.get('/api/v1/query', (req, res) => {...})
+   - Access query params with: req.query
+   - Example URL:
+       http://localhost:5000/api/v1/query?name=John&id=4
+     Result:
+       req.query = { name: "John", id: "4" }
+     *All values are strings by default.*
+
+5. Example Implementation:
+   app.get('/api/v1/query', (req, res) => {
+     const { search, limit } = req.query;
+     let sortedProducts = [...products];
+
+     // filter by search
+     if (search) {
+       sortedProducts = sortedProducts.filter(product =>
+         product.name.startsWith(search)
+       );
+     }
+
+     // limit results
+     if (limit) {
+       sortedProducts = sortedProducts.slice(0, Number(limit));
+     }
+
+     // no matches
+     if (sortedProducts.length < 1) {
+       return res.status(200).json({
+         success: true,
+         data: [],
+         message: "No products matched your search"
+       });
+     }
+
+     // default
+     res.status(200).json(sortedProducts);
+   });
+
+6. Behavior:
+   - No query params      → return all products.
+   - ?limit=2             → return only 2 products.
+   - ?search=A            → return products starting with "A".
+   - ?search=A&limit=1    → return first match starting with "A".
+   - Wrong key/value      → ignored, defaults used.
+
+7. Notes & Gotchas:
+   - Query params are always strings → convert if number needed.
+   - Misspelled key (e.g., "limt" instead of "limit") → ignored.
+   - Empty results:
+       Do not return 404 (endpoint exists).
+       Return { success:true, data:[] } instead.
+   - Important: "Cannot send headers" error happens if
+     multiple responses are sent in one request
+     (covered in next lecture).
+
+
+-----------------------------------------------------------
+TOPIC: Express Error - Multiple Responses in One Request
+--------------------------------------------------------
+
+1. Problem:
+   - In JavaScript, if "return" is omitted inside conditions,
+     code execution continues.
+   - In Express, this causes "Cannot set headers after they
+     are sent to the client" error.
+   - Reason: The server tries to send multiple responses
+     for the same request.
+
+2. Rules:
+   - Only ONE response per request is allowed.
+   - You can send response A OR response B (based on condition),
+     but not both one after another.
+   - Example:
+       if (no products) -> res.json({success:true, data:[]})
+       else -> res.json(products)
+     ❌ Wrong: sending both responses in same execution.
+
+3. Demo:
+   - URL: /api/v1/query?search=B
+   - Without return:
+       - Response shows success:true with data.
+       - Server logs error: "Cannot set headers after they
+         are sent to the client."
+   - With return:
+       - Error avoided, only one response sent.
+
+4. Best Practice:
+   - Always use "return" when sending response inside condition.
+   - Ensures code exits after sending response, preventing
+     multiple responses.
+   - Even if no code follows, adding "return" is a safe habit.
+
+5. Query vs Main Route:
+   - Normally, don’t create a separate route just for queries.
+   - Instead:
+       app.get('/api/products', (req,res) => {
+         // if query params → filter/sort/paginate
+         // else → return all products
+       });
+   - Same route handles both with or without query strings.
+
+6. Summary:
+   - Only one response per request.
+   - Always return after sending response.
+   - Queries are usually handled inside the main resource route,
+     not in a separate "query" route.
