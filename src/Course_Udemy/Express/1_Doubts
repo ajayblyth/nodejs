@@ -1,0 +1,50 @@
+Doubts
+Q4. What are the 3 common ways to import and use readFileSync?
+
+1) Full module import:
+    const fs = require('fs');                      // Import entire fs module
+    const data = fs.readFileSync('file.txt');      // Access function via fs object
+
+2) Destructuring import:
+    const { readFileSync } = require('fs');        // Extract only readFileSync from fs
+    const data = readFileSync('file.txt');         // Use directly without fs prefix
+
+3) Destructuring with alias:
+    const { readFileSync: read } = require('fs');  // Extract and rename to 'read'
+    const data = read('file.txt');                 // Use alias instead of original name
+------------------------------------------------------
+
+require + destructuring:
+
+1. const { products } = require('./data');
+   → directly extracts 'products' from exported object.
+
+2. const products = require('./data');
+   → gives whole object; need products.products to access array.
+
+✅ Use destructuring to avoid extra .property.
+------------------------------------------------------------------------
+Q: What does [...products] mean in JavaScript?
+
+A:
+1) The ... is called the "spread operator".
+2) products is an array (example: [ {id:1}, {id:2}, ... ]).
+3) [...products] creates a NEW array and copies all elements of products into it.
+   - This prevents accidental changes to the original products array.
+
+Example:
+------------
+const arr = [1, 2, 3]
+const copy = [...arr]       // makes a new array [1, 2, 3]
+
+copy.push(4)
+
+console.log(arr)   // [1, 2, 3]   (original not changed)
+console.log(copy)  // [1, 2, 3, 4]
+
+If we do:
+------------
+let copy = arr     // NO spread used
+
+Then arr and copy point to SAME array in memory.
+Changing one will also change the other.

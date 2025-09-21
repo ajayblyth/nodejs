@@ -277,3 +277,255 @@ TOPIC: Handling POST Requests from JavaScript using Axios
    - Middleware ensures req.body populated correctly
    - Response JSON used to update front-end dynamically
    - Enables future manipulation with PUT/DELETE/POST methods
+------------------------------------------------------------------
+
+PUT Method in Express - Updating Data (Full Flow with Postman Testing)
+
+1. Purpose of PUT:
+   - PUT method is used to **edit/update existing data**.
+   - Conventionally, if we have a list (e.g., /api/orders or /api/people):
+     - To edit/delete a specific item, we use a **route parameter**: /api/people/:id
+     - This :id allows us to target a single item in the list.
+
+2. Route Setup in Express:
+   - Use `app.put()` to define a PUT route.
+   - Example route for people array:
+     ```
+     app.put('/api/people/:id', (req, res) => {
+        // Logic will go here
+     });
+     ```
+   - Notes:
+     - You can technically name the route parameter anything, e.g., :personId, but we'll use :id.
+     - Convention exists to clearly indicate which resource is being updated.
+
+3. Accessing Parameters and Body:
+   - **Route params** provide the ID of the item:
+     ```
+     const { id } = req.params;
+     ```
+   - **Request body** provides the new value(s) to update:
+     ```
+     const { name } = req.body;
+     ```
+   - Both are required for updating:
+     - Params → which item to update.
+     - Body → what data to update it with.
+
+4. Testing Connectivity in Postman (Initial Test):
+   - URL: `/api/people/1` (change ID as needed, e.g., 1 to 5)
+   - Method: PUT
+   - Body: JSON (raw)
+     ```
+     {
+       "name": "Peter"
+     }
+     ```
+   - Temporary response for testing:
+     ```
+     res.send("hello world");
+     ```
+   - Console log (optional) to verify values:
+     ```
+     console.log(id, name);
+     ```
+   - Result:
+     - Status: 200
+     - Console shows ID and new name from Postman.
+
+5. PUT Logic Implementation:
+   - Find person by ID in local array:
+     ```
+     const person = people.find(p => p.id === Number(id));
+     ```
+   - If person not found → send 404 error:
+     ```
+     if (!person) {
+         return res.status(404).json({
+             success: false,
+             message: `no person with id ${id}`
+         });
+     }
+     ```
+   - If person exists → update name:
+     ```
+     const newPeople = people.map(p => {
+         if (p.id === Number(id)) {
+             p.name = name; // Update name from body
+         }
+         return p;
+     });
+     ```
+   - Send updated array as response:
+     ```
+     res.status(200).json({
+         success: true,
+         data: newPeople
+     });
+     ```
+
+6. Full PUT Route Example:
+
+app.put('/api/people/:id', (req, res) => {
+const { id } = req.params;
+const { name } = req.body;
+
+   const person = people.find(p => p.id === Number(id));
+
+   if (!person) {
+       return res.status(404).json({
+           success: false,
+           message: `no person with id ${id}`
+       });
+   }
+
+   const newPeople = people.map(p => {
+       if (p.id === Number(id)) {
+           p.name = name;
+       }
+       return p;
+   });
+
+   res.status(200).json({
+       success: true,
+       data: newPeople
+   });
+
+
+});
+
+
+7. Testing in Postman (Final Verification):
+- Path: `/api/people/1`
+- PUT JSON body:
+  ```
+  {
+    "name": "Peter"
+  }
+  ```
+- Expected Response:
+  ```
+  {
+    "success": true,
+    "data": [
+        { "id": 1, "name": "Peter" },
+        { "id": 2, "name": "Alice" },
+        ...
+    ]
+  }
+  ```
+- Notes:
+  - If ID does not exist → returns 404 with error message.
+  - If ID exists → name is updated and entire array returned.
+  - You can test multiple IDs (1 to 5) and observe changes.
+
+8. Key Points to Remember:
+- PUT targets **specific resource** using route param `:id`.
+- Body contains new data for the resource.
+- Two key sources in request:
+  - `req.params` → ID
+  - `req.body` → Updated values
+- Testing in Postman allows you to verify route and logic before integrating with a database.
+- Local array simulates database; logic remains the same when connecting real DB later.
+----------------------------------------------------------------------------------------------
+
+
+
+DELETE Method in Express - Removing Data (Full Flow with Postman Testing)
+
+1. Purpose of DELETE:
+   - DELETE method removes an existing resource from a list.
+   - Example: DELETE /api/people/1 → removes person with id=1.
+   - Unlike PUT, DELETE does not expect data in the body.
+   - You just hit the URL with the ID and that resource is removed.
+
+2. Important Note on Routes:
+   - Even if the path is the same (e.g., /api/people), different HTTP methods
+     (GET, POST, PUT, DELETE) are considered different requests.
+   - Example:
+       app.get('/api/people')
+       app.post('/api/people')
+       app.put('/api/people/:id')
+       app.delete('/api/people/:id')
+   - These are all different routes, even with the same path.
+
+3. Express DELETE Route Setup:
+   app.delete('/api/people/:id', (req, res) => {
+       // Logic will go here
+   });
+
+   - req.params.id → gives us the ID from the URL.
+   - No req.body needed (we are just deleting).
+
+4. Finding and Validating Person:
+   const person = people.find(p => p.id === Number(req.params.id));
+   if (!person) {
+       return res.status(404).json({
+           success: false,
+           message: `no person with id ${req.params.id}`
+       });
+   }
+
+   - If person not found → return 404 error with message.
+   - If found → proceed to remove.
+
+5. Deleting from Array:
+   const newPeople = people.filter(p => p.id !== Number(req.params.id));
+
+   - This excludes the person whose ID matched req.params.id.
+
+6. Sending Response:
+   res.status(200).json({
+       success: true,
+       data: newPeople
+   });
+
+7. Full DELETE Route Example:
+   app.delete('/api/people/:id', (req, res) => {
+       const person = people.find(p => p.id === Number(req.params.id));
+
+       if (!person) {
+           return res.status(404).json({
+               success: false,
+               message: `no person with id ${req.params.id}`
+           });
+       }
+
+       const newPeople = people.filter(p => p.id !== Number(req.params.id));
+
+       return res.status(200).json({
+           success: true,
+           data: newPeople
+       });
+   });
+
+8. Testing in Postman:
+   - Path: DELETE /api/people/abc
+       Response:
+       {
+         "success": false,
+         "message": "no person with id abc"
+       }
+
+   - Path: DELETE /api/people/1
+       Response:
+       {
+         "success": true,
+         "data": [ ... remaining people ... ]
+       }
+
+   - Body in Postman is ignored (not needed).
+
+9. Key Notes from Instructor:
+   - DELETE and PUT are very similar:
+       PUT → update data
+       DELETE → remove data
+   - Both rely on params (:id) for identifying item.
+   - Postman is used during development since it’s faster than building
+     a frontend for every route.
+   - In real-world apps:
+       → The frontend (React, Angular, etc.) or another service will use this API.
+   - Purpose of API:
+       → Provide data for others to use, not just for Postman testing.
+
+

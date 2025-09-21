@@ -1,0 +1,336 @@
+Express Router - Organizing Routes (Transcript Notes + Code)
+
+1. Problem:
+   - As app.js grows with more routes, code becomes messy.
+   - Solution: Use Express Router to group routes.
+   - Router lets us split routes into separate files (e.g., routes/auth.js, routes/people.js).
+   - This keeps app.js clean and readable.
+
+2. MVC Context:
+   - Common pattern = MVC (Model, View, Controller).
+   - Currently: Missing "Model" part because no database yet.
+   - Router helps move toward Controller separation.
+
+3. Step 1: Adjust Existing Routes
+   - Example: Change POST request path from:
+       /api/postman/people → /api/people/postman
+   - Move login route above other routes in app.js for clarity.
+
+   Pattern Observed:
+     /api/people
+     /api/people/:id
+     /api/people/postman
+   → Best to group all /api/people routes together.
+
+4. Step 2: Create Routes Folder
+   - Folder: routes/
+   - Files inside: people.js, auth.js
+   - people.js → handles all /api/people routes
+   - auth.js → handles login (later can include register, logout, etc.)
+
+5. Step 3: Setup people.js
+   Code:
+   --------------------------------------------------
+   const express = require('express');
+   const router = express.Router();
+
+   const { people } = require('../data'); // adjust path
+
+   // Example routes moved here
+   router.get('/', (req, res) => {
+       res.status(200).json({ success: true, data: people });
+   });
+
+   router.post('/', (req, res) => {
+       const { name } = req.body;
+       if (!name) {
+           return res.status(400).json({ success: false, msg: 'Please provide name' });
+       }
+       res.status(201).json({ success: true, person: name });
+   });
+
+   router.post('/postman', (req, res) => {
+       const { name } = req.body;
+       if (!name) {
+           return res.status(400).json({ success: false, msg: 'Please provide name' });
+       }
+       res.status(201).json({ success: true, data: [...people, name] });
+   });
+
+   router.put('/:id', (req, res) => {
+       const { id } = req.params;
+       const { name } = req.body;
+       const person = people.find(p => p.id === Number(id));
+
+       if (!person) {
+           return res.status(404).json({ success: false, msg: `no person with id ${id}` });
+       }
+
+       const newPeople = people.map(p => {
+           if (p.id === Number(id)) {
+               return { ...p, name };
+           }
+           return p;
+       });
+
+       res.status(200).json({ success: true, data: newPeople });
+   });
+
+   router.delete('/:id', (req, res) => {
+       const { id } = req.params;
+       const person = people.find(p => p.id === Number(id));
+
+       if (!person) {
+           return res.status(404).json({ success: false, msg: `no person with id ${id}` });
+       }
+
+       const newPeople = people.filter(p => p.id !== Number(id));
+       res.status(200).json({ success: true, data: newPeople });
+   });
+
+   module.exports = router;
+   --------------------------------------------------
+
+   Note:
+   - Use router instead of app.
+   - Remove "/api/people" from each route → app.js provides base.
+   - Only keep "/", "/:id", "/postman" etc.
+
+6. Step 4: Modify app.js
+   Code:
+   --------------------------------------------------
+   const express = require('express');
+   const app = express();
+   const people = require('./routes/people');
+   const auth = require('./routes/auth');
+
+   app.use(express.static('./methods-public'));
+   app.use(express.urlencoded({ extended: false }));
+   app.use(express.json());
+
+   // Routes
+   app.use('/api/people', people);
+   app.use('/login', auth);
+
+   app.listen(5000, () => {
+       console.log('Server is listening on port 5000...');
+   });
+   --------------------------------------------------
+
+   - app.use('/api/people', people);
+     → all routes in people.js start with /api/people
+   - app.use('/login', auth);
+     → login route handled by auth.js
+
+7. Step 5: Setup auth.js
+   Code:
+   --------------------------------------------------
+   const express = require('express');
+   const router = express.Router();
+
+   router.post('/', (req, res) => {
+       const { name } = req.body;
+       if (!name) {
+           return res.status(400).send('Please provide credentials');
+       }
+       res.status(200).send(`Welcome ${name}`);
+   });
+
+   module.exports = router;
+   --------------------------------------------------
+
+   - app.js mounts it at /login
+   - So POST /login works correctly
+   - Route inside auth.js only needs "/"
+
+8. Step 6: Test Routes
+   - GET /api/people → returns all people
+   - POST /api/people → adds new person
+   - POST /api/people/postman → adds new person with array response
+   - PUT /api/people/:id → updates person
+   - DELETE /api/people/:id → removes person
+   - POST /login → test with form or Postman (returns welcome message)
+
+9. Key Notes:
+   - app.js now cleaner: only middleware + app.use for routes.
+   - Router files handle the actual endpoints.
+   - Must remove base paths from router files because app.js already defines them.
+   - Benefit: Scales better when routes grow.
+   - MVC will later add controllers (separate logic from routes) and models (database).
+-------------------------------------------------------------------------------------------
+
+====================================================================
+EXPRESS.JS - REFACTORING WITH CONTROLLERS (MVC PATTERN PREP)
+====================================================================
+
+1) PROBLEM STATEMENT
+   - app.js started to look cleaner after moving routes into separate
+     files (auth.js, people.js) with Express Router.
+   - But people.js still has too much functionality (multiple routes).
+   - Best practice: move business logic (functions) into CONTROLLERS.
+   - This matches MVC pattern:
+       - M → Model (DB layer, not yet used)
+       - V → View (not in API)
+       - C → Controller (functions for route handling)
+
+====================================================================
+2) SETUP CONTROLLERS
+   - Create a new folder: controllers
+   - Inside: create people.js
+   - Move each function (logic) out of routes/people.js and into
+     controllers/people.js
+
+--------------------------------------------------------------------
+controllers/people.js
+--------------------------------------------------------------------
+const people = require('../data');
+
+// GET all people
+const getPeople = (req, res) => {
+  res.status(200).json({ success: true, data: people });
+};
+
+// POST create person
+const createPerson = (req, res) => {
+  const { name } = req.body;
+  if (!name) {
+    return res.status(400).json({ success: false, msg: 'Please provide name' });
+  }
+  res.status(201).json({ success: true, person: name });
+};
+
+// POST create person via Postman
+const createPersonPostman = (req, res) => {
+  const { name } = req.body;
+  res.status(201).json({ success: true, data: [...people, name] });
+};
+
+// PUT update person
+const updatePerson = (req, res) => {
+  const { id } = req.params;
+  const { name } = req.body;
+
+  const person = people.find(p => p.id === Number(id));
+  if (!person) {
+    return res.status(404).json({ success: false, msg: `No person with id ${id}` });
+  }
+
+  const newPeople = people.map(p => {
+    if (p.id === Number(id)) {
+      p.name = name;
+    }
+    return p;
+  });
+
+  res.status(200).json({ success: true, data: newPeople });
+};
+
+// DELETE person
+const deletePerson = (req, res) => {
+  const { id } = req.params;
+  const person = people.find(p => p.id === Number(id));
+  if (!person) {
+    return res.status(404).json({ success: false, msg: `No person with id ${id}` });
+  }
+  const newPeople = people.filter(p => p.id !== Number(id));
+  res.status(200).json({ success: true, data: newPeople });
+};
+
+// EXPORT all controllers
+module.exports = {
+  getPeople,
+  createPerson,
+  createPersonPostman,
+  updatePerson,
+  deletePerson
+};
+--------------------------------------------------------------------
+
+====================================================================
+3) USE CONTROLLERS IN ROUTES
+   - Now people.js in routes folder only defines routes
+   - Import controller functions and pass them directly
+
+--------------------------------------------------------------------
+routes/people.js
+--------------------------------------------------------------------
+const express = require('express');
+const router = express.Router();
+
+const {
+  getPeople,
+  createPerson,
+  createPersonPostman,
+  updatePerson,
+  deletePerson
+} = require('../controllers/people');
+
+// Option 1: Traditional route setup
+router.get('/', getPeople);
+router.post('/', createPerson);
+router.post('/postman', createPersonPostman);
+router.put('/:id', updatePerson);
+router.delete('/:id', deletePerson);
+
+module.exports = router;
+--------------------------------------------------------------------
+
+====================================================================
+4) ALTERNATE ROUTE SETUP (CHAINING)
+   - Express allows chaining multiple methods with router.route()
+
+--------------------------------------------------------------------
+routes/people.js (Alternative)
+--------------------------------------------------------------------
+const express = require('express');
+const router = express.Router();
+
+const {
+  getPeople,
+  createPerson,
+  createPersonPostman,
+  updatePerson,
+  deletePerson
+} = require('../controllers/people');
+
+// Group GET + POST on same base path
+router.route('/')
+  .get(getPeople)
+  .post(createPerson);
+
+// Postman POST
+router.route('/postman')
+  .post(createPersonPostman);
+
+// Group PUT + DELETE on same :id path
+router.route('/:id')
+  .put(updatePerson)
+  .delete(deletePerson);
+
+module.exports = router;
+--------------------------------------------------------------------
+
+====================================================================
+5) BENEFITS
+   - Routes are very clean (only path + controller reference).
+   - Controllers handle logic separately, reusable and organized.
+   - app.js remains minimal, using only app.use for mounting routers.
+   - Easier maintenance and scalability.
+
+====================================================================
+6) TESTING
+   - GET /api/people → returns people array
+   - POST /api/people with { "name": "peter" } → adds new person
+   - POST /api/people/postman → adds via Postman
+   - PUT /api/people/:id with { "name": "newName" } → updates record
+   - DELETE /api/people/:id → deletes person
+   - Verified: tested GET and DELETE, both work fine.
+
+====================================================================
+7) NEXT STEP
+   - Now server structure is MVC-ready:
+       - Routes → only paths
+       - Controllers → only logic
+       - Models (DB) → coming next
+   - Clean separation prepares app for database integration.
+====================================================================
