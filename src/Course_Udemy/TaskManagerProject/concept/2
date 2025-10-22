@@ -1,0 +1,81 @@
+====================================================================
+TASK MANAGER API - ROUTES & CONTROLLERS SETUP
+====================================================================
+
+1) PROJECT STRUCTURE
+   - Create two new folders:
+       1. controllers
+       2. routes
+   - Create new files:
+       • controllers/tasks.js
+       • routes/tasks.js
+
+--------------------------------------------------------------------
+2) SETUP ROUTER (routes/tasks.js)
+
+       const express = require('express');  // - Import Express:
+       const router = express.Router(); //initialise
+
+   - Temporary GET route (hardcoded response):
+       router.route('/')
+             .get((req, res) => {
+                 res.send('All items');
+             });
+   - Export router:
+       module.exports = router;
+
+--------------------------------------------------------------------
+3) CONNECT ROUTER IN app.js
+   - Import router:
+       const tasks = require('./routes/tasks');
+   - Middleware for JSON parsing:
+       app.use(express.json());  // enables req.body
+   - Use router with base path:
+       app.use('/api/v1/tasks', tasks);
+
+--------------------------------------------------------------------
+4) TEST BASIC ROUTE
+   - Open browser or Postman:
+       GET http://localhost:3000/api/v1/tasks
+   - Expected response:
+       "All items"
+
+--------------------------------------------------------------------
+5) CREATE CONTROLLER (controllers/tasks.js)
+   - Define controller function:
+       const getAllTasks = (req, res) => {
+           res.send('All items');
+       };
+   - Export as object for future expansion:
+       module.exports = { getAllTasks };
+
+--------------------------------------------------------------------
+6) UPDATE ROUTER TO USE CONTROLLER
+   - Import controller in routes/tasks.js:
+       const { getAllTasks } = require('../controllers/tasks');
+   - Update route to use controller function:
+       router.route('/').get(getAllTasks);
+
+--------------------------------------------------------------------
+7) VERIFY ROUTE WITH CONTROLLER
+   - Open browser or Postman:
+       GET http://localhost:3000/api/v1/tasks
+   - Expected response:
+       "All items"  (now served from controller)
+
+--------------------------------------------------------------------
+8) NEXT STEPS
+   - Create additional controller functions for:
+       • createTask (POST)
+       • getSingleTask (GET /:id)
+       • updateTask (PATCH /:id)
+       • deleteTask (DELETE /:id)
+   - Update routes/tasks.js to include these functions.
+   - Test all routes in Postman to ensure correct responses.
+
+====================================================================
+NOTES
+   - Keeping routes and controllers separate prevents app.js from becoming messy.
+   - Middleware express.json() is required to parse JSON payloads in requests.
+   - Exporting controllers as objects makes it easier to scale and add more functions.
+====================================================================

@@ -1,0 +1,226 @@
+====================================================================
+TASK MANAGER API - PROJECT INTRODUCTION
+====================================================================
+
+1) MAIN GOALS
+   - Learn how to set up and connect to a Cloud database.
+   - Persist data in the Cloud (not just local storage).
+   - Perform CRUD operations (Create, Read, Update, Delete).
+   - Work only on backend (since this is a Node.js course).
+   - Use Postman + a small prepared frontend to test requests.
+
+--------------------------------------------------------------------
+2) DIFFERENCE FROM A SIMPLE TODO APP
+   - Typical to-do list stores tasks in local storage (temporary).
+   - Here, tasks are persisted in a Cloud database via our API.
+   - Realistic backend structure, not just local memory.
+
+--------------------------------------------------------------------
+3) FUNCTIONALITY OVERVIEW
+   - FRONTEND: a simple form (already prepared for you).
+   - BACKEND: our API will handle requests.
+
+   a) CREATE (POST request)
+      - User enters a new task in the form.
+      - On submit → POST request sent.
+      - Response → return all tasks (including the new one).
+      - New task appears in the task list.
+
+   b) READ
+      - Get all tasks (main list).
+      - Get a single task (when clicking "edit" or "view").
+
+   c) UPDATE (PUT/PATCH request)
+      - Select an existing task.
+      - Can rename it (e.g., "Old Task").
+      - Can mark it as "completed".
+      - Submit edit → changes saved in DB.
+      - Navigate back → updated task is shown.
+
+   d) DELETE (DELETE request)
+      - Select a task (e.g., "Walk the cat").
+      - Remove from the list.
+      - Task disappears (deleted from DB).
+
+--------------------------------------------------------------------
+4) BIG PICTURE
+   - We build the API that the frontend consumes.
+   - CRUD with persistence in Cloud database.
+   - We’ll focus on backend, but sometimes a frontend is provided
+     to visualize request/response flow (instead of only Postman).
+   - Foundation for all real-world applications.
+====================================================================
+====================================================================
+TASK MANAGER API - PROJECT SETUP
+====================================================================
+
+1) FINAL PROJECT FOLDER
+   - Contains the complete Task Manager project.
+   - Includes frontend (public folder) + backend code.
+
+2) REQUIREMENTS TO RUN
+   - Install all dependencies.
+   - Create a `.env` file.
+   - Inside `.env`, define:
+       MONGO_URI = <your MongoDB connection string>
+   - These steps will be explained during the project videos.
+
+--------------------------------------------------------------------
+3) PROJECT STRUCTURE
+   - public/
+     → Contains the frontend app (already prepared).
+     → Built with vanilla.js (for simplicity).
+   - app.js
+     → Currently just one line: "Task Manager App".
+   - package.json
+     → Dependencies:
+         * express   → server framework.
+         * dotenv    → load environment variables (e.g., MONGO_URI).
+         * mongoose  → interact with MongoDB.
+     → Dev Dependency:
+         * nodemon   → auto-restarts server on code changes.
+   - .gitignore
+     → Used to prevent certain files/folders from being pushed to GitHub.
+     → Ignores:
+         * node_modules (very large, recreated via npm install).
+         * .env (keeps secrets safe).
+
+--------------------------------------------------------------------
+4) DEVELOPMENT SETUP
+   - Install dependencies with `npm install`.
+   - Run dev server with:
+       npm start
+     → This uses nodemon to run `app.js`.
+   - Nodemon watches files and restarts automatically on save.
+
+--------------------------------------------------------------------
+5) WHY THIS SETUP?
+   - express → core server logic.
+   - dotenv → manage environment variables securely.
+   - mongoose → database connection & schema handling.
+   - nodemon → smoother dev workflow.
+   - gitignore → keeps repo clean and secure.
+   - public frontend → only for testing/visualizing API (not focus).
+====================================================================
+====================================================================
+TASK MANAGER API - STARTER SETUP AND BASIC EXPRESS SERVER
+====================================================================
+
+1) NAVIGATE TO STARTER FOLDER
+   - Go to project folder: "Task Manager"
+   - Open the "starter" folder (third project).
+   - Fastest way: Use terminal command:
+       cd <path-to-starter-folder>
+
+2) INSTALL DEPENDENCIES
+   - Run the following command to install all packages:
+       npm install
+   - Wait until all packages are installed.
+   - Packages include: express, dotenv, mongoose, etc.
+
+3) START DEVELOPMENT SERVER
+   - Spin up nodemon with:
+       npm start
+   - Optional: If you want a different command, modify package.json scripts.
+   - If successful, console displays:
+       Task Manager
+
+--------------------------------------------------------------------
+4) SET UP BASIC EXPRESS SERVER
+   - Create variable for express:
+       const express = require('express');
+
+   - Initialize express app:
+       const app = express();
+
+   - Set port variable:
+       const port = 3000;   // hardcoded for now
+
+   - Start server:
+       app.listen(port, () => {
+           console.log(`Server is listening on port ${port}...`);
+       });
+
+   - Console should display:
+       Server is listening on port 3000...
+
+--------------------------------------------------------------------
+5) SET UP FIRST ROUTE
+   - Comment section:
+       // ROUTES
+
+   - Create a GET route for testing:
+       app.get('/hello', (req, res) => {
+           res.send('Task Manager App');
+       });
+
+   - Test in browser:
+       Navigate to http://localhost:3000/hello
+       → Should display: "Task Manager App"
+
+--------------------------------------------------------------------
+SUMMARY
+   - Starter folder is ready with all dependencies.
+   - Basic Express server running on port 3000.
+   - First GET route (/hello) confirms server works.
+   - Next steps: Connect server to database, add full API routes.
+====================================================================
+====================================================================
+TASK MANAGER API - ROUTE STRUCTURE & API DESIGN
+====================================================================
+
+1) IDENTIFY REQUIRED ROUTES
+   - Analyze application functionality:
+       • Get all tasks         → GET request
+       • Create new task       → POST request
+       • Delete task           → DELETE request
+       • Get single task info  → GET request with ID param
+       • Update task           → PATCH request (change completed status, etc.)
+
+2) SUMMARY OF ROUTES
+   - Base URL: /api/v1/tasks
+   - Routes:
+       1. GET    /api/v1/tasks          → fetch all tasks
+       2. POST   /api/v1/tasks          → create new task
+       3. GET    /api/v1/tasks/:id      → fetch single task by ID
+       4. PATCH  /api/v1/tasks/:id      → update task by ID
+       5. DELETE /api/v1/tasks/:id      → delete task by ID
+
+--------------------------------------------------------------------
+3) REASONS FOR ROUTE STRUCTURE
+
+   3.1 API Prefix
+       - Forward slash /api signals all routes here are API routes.
+       - Separates API routes from server-side HTML or static pages.
+           e.g., index.html can be served on '/'.
+
+   3.2 Versioning
+       - /v1 signals API version 1.
+       - Useful when API changes in the future.
+           Example: /api/v2/tasks can coexist with /v1/tasks.
+
+   3.3 Colon for ID (/:id)
+       - Convention for dynamic route parameters.
+       - Allows easy access to a specific resource.
+       - GET, PATCH, DELETE for single resource use this pattern.
+
+   3.4 GET vs POST vs PATCH
+       - GET       → read data
+       - POST      → create data
+       - PATCH     → update part of resource
+       - DELETE    → remove resource
+       - PUT can also be used for full updates (covered later).
+
+--------------------------------------------------------------------
+4) BEST PRACTICES & EXAMPLES
+   - Look at other APIs (e.g., Hacker News API, Algolia) for reference.
+   - Understand convention before implementing.
+   - Keep routes RESTful and consistent.
+
+--------------------------------------------------------------------
+5) NEXT STEPS
+   - Implement basic routes with simple responses.
+   - Open Postman to test requests.
+   - Discuss conventions further before connecting database.
+   - Cover differences between PUT and PATCH in upcoming lessons.
+====================================================================

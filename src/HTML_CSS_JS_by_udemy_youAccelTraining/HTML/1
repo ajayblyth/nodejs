@@ -1,0 +1,360 @@
+============================================================
+HTML NOTES – COMPLETE (Videos 1–10)
+============================================================
+
+------------------------------------------------------------
+1. INTRODUCTION TO HTML
+------------------------------------------------------------
+- HTML (HyperText Markup Language) is a programming language
+  that communicates instructions to your web browser.
+- It instructs the browser on *how* a web page should be displayed.
+- Along with HTML, CSS defines:
+      - Fonts
+      - Colors
+      - Graphics
+      - Hyperlinks
+  (CSS will be explored later.)
+
+------------------------------------------------------------
+2. UNDERSTANDING A WEB PAGE’S SOURCE CODE
+------------------------------------------------------------
+Example:
+    - Open any web page (e.g., techcrunch.com).
+    - Right-click → "View Page Source".
+    - HTML code defines layout & content.
+    - All HTML pages follow a similar structure.
+
+Goal:
+    - By end of this section, you’ll understand and create
+      complete HTML pages independently.
+
+------------------------------------------------------------
+3. SETTING UP YOUR HTML FILE
+------------------------------------------------------------
+Tools:
+    - Windows: Notepad++
+    - Mac: TextWrangler
+
+Steps:
+    1. Open text editor.
+    2. File → Open → Select file.
+    3. Start editing HTML document.
+
+------------------------------------------------------------
+4. DOCTYPE DECLARATION
+------------------------------------------------------------
+Syntax:
+    <!DOCTYPE html>
+
+Purpose:
+    - Tells browser this is HTML5.
+    - HTML5 = latest & widely supported.
+
+Notes:
+    - Older versions:
+        * XHTML → strict rules (every tag must close)
+        * HTML4 → flexible but lacks new features
+    - HTML5 is preferred → flexible & modern
+
+------------------------------------------------------------
+5. HTML ROOT TAG
+------------------------------------------------------------
+Syntax:
+    <html>
+        ...content...
+    </html>
+
+Purpose:
+    - Root element of HTML page.
+    - Everything (head + body) goes inside.
+
+Notes:
+    - Opening tag <html> must have closing tag </html>.
+
+------------------------------------------------------------
+6. HEAD SECTION
+------------------------------------------------------------
+Syntax:
+    <head>
+        ...metadata...
+    </head>
+
+Purpose:
+    - Contains information *about* the web page.
+    - Content inside <head> is NOT visible on the webpage.
+
+------------------------------------------------------------
+7. TITLE TAG
+------------------------------------------------------------
+Syntax:
+    <title>My First Web Page</title>
+
+Explanation:
+    - Defines title shown on browser tab.
+    - Must be placed inside <head>.
+
+------------------------------------------------------------
+8. META TAGS
+------------------------------------------------------------
+Meta tags communicate with browsers and search engines.
+
+(1) META DESCRIPTION
+Syntax:
+    <meta name="description" content="This is my first web page">
+
+Purpose:
+    - Tells search engines what your page is about.
+    - Appears below your website link in search results.
+    - If not provided, search engines generate automatically.
+
+(2) META CHARACTER SET
+Syntax:
+    <meta charset="UTF-8">
+
+Purpose:
+    - Defines character encoding.
+    - UTF-8 = standard for most languages.
+
+(3) META VIEWPORT
+Syntax:
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+Purpose:
+    - Ensures correct display on all devices.
+    - width=device-width → fits page width to device screen
+    - initial-scale=1.0 → sets default zoom level
+
+------------------------------------------------------------
+9. STYLE TAG (INTERNAL CSS)
+------------------------------------------------------------
+Syntax:
+    <style>
+        body { color: red; }
+    </style>
+
+Explanation:
+    - Defines CSS directly inside HTML.
+    - Located in <head>.
+    - Affects element styling: color, font, size, etc.
+
+------------------------------------------------------------
+10. SCRIPT TAG (JAVASCRIPT)
+------------------------------------------------------------
+Syntax:
+    <script>
+        function myFunction() {
+            let x = document.getElementById("nameInput");
+            x.value = x.value.toUpperCase();
+        }
+    </script>
+
+Explanation:
+    - Adds interactivity.
+    - Functions defined inside <script> tags.
+    - Example: converts input text to uppercase.
+
+------------------------------------------------------------
+11. BODY SECTION
+------------------------------------------------------------
+Syntax:
+    <body>
+        This is my first web page.
+        <form>
+            <label>Enter your name:</label>
+            <input type="text" id="nameInput" onblur="myFunction()">
+        </form>
+    </body>
+
+Explanation:
+    - Contains everything visible.
+    - Text, images, tables, lists, forms, etc.
+    - Default text appears top-left.
+
+------------------------------------------------------------
+12. JAVASCRIPT IN ACTION
+------------------------------------------------------------
+How it works:
+    - User types lowercase → clicks elsewhere.
+    - Function triggers → converts text to uppercase.
+
+------------------------------------------------------------
+13. COMPLETE BASIC HTML DOCUMENT
+------------------------------------------------------------
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>My First Web Page</title>
+        <meta name="description" content="This is my first HTML page">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            body { color: red; }
+        </style>
+        <script>
+            function myFunction() {
+                let x = document.getElementById("nameInput");
+                x.value = x.value.toUpperCase();
+            }
+        </script>
+    </head>
+    <body>
+        This is my first web page.
+        <p>Welcome to HTML Basics.</p>
+        <form>
+            <label>Enter your name:</label>
+            <input type="text" id="nameInput" onblur="myFunction()">
+        </form>
+    </body>
+</html>
+
+------------------------------------------------------------
+14. PARAGRAPH TAG (<p>)
+------------------------------------------------------------
+Purpose:
+    - Creates spacing between text blocks.
+    - Automatically adds margin before & after.
+
+Syntax:
+    <p>This is a paragraph of text.</p>
+
+Example:
+    <body>
+        <p>Hello World</p>
+        <p>Welcome to HTML</p>
+    </body>
+
+Result:
+    - Each line appears separately with spacing.
+
+------------------------------------------------------------
+15. LINE BREAKS VS PARAGRAPH SPACING
+------------------------------------------------------------
+Observation:
+    - <p> → larger vertical space (double line spacing)
+    - <br> → smaller gap, single line break
+
+Syntax:
+    <p>
+        Line One<br>
+        Line Two<br>
+        Line Three
+    </p>
+
+Notes:
+    - <br> has no closing tag.
+    - Useful for addresses, poems, or breaking lines without extra spacing.
+
+------------------------------------------------------------
+16. WHITESPACE COLLAPSING
+------------------------------------------------------------
+- HTML ignores extra spaces, tabs, line breaks.
+- Only one space is displayed.
+
+Example:
+    Code: Line 1      Line 2      Line 3
+    Output: Line 1 Line 2 Line 3
+
+- Use &nbsp; to add multiple spaces manually.
+
+Example:
+    Line 1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Line 2
+    - Each &nbsp; = one visible space.
+
+------------------------------------------------------------
+17. HEADER TAGS (<h1> to <h6>)
+------------------------------------------------------------
+Purpose:
+    - Create headings/titles with varying size & importance.
+
+Syntax:
+    <h1>Main Heading</h1>
+    <h2>Sub Heading</h2>
+    <h3>Section Title</h3>
+
+Notes:
+    - <h1> = largest, <h6> = smallest
+    - Browsers apply bold & spacing automatically.
+    - Use hierarchically for structure & SEO.
+
+------------------------------------------------------------
+18. TEXT FORMATTING TAGS
+------------------------------------------------------------
+(1) Bold Text
+Syntax:
+    <strong>Important</strong>  → semantic bold
+    <b>Bold only</b>           → visual only
+
+(2) Italic Text
+Syntax:
+    <em>Emphasized</em>        → semantic italic
+    <i>Italic only</i>          → visual only
+
+(3) Underlined
+Syntax:
+    <u>Underlined text</u>
+
+(4) Strikethrough
+Syntax:
+    <strike>Old text</strike>
+    <s>Modern alternative</s>
+
+------------------------------------------------------------
+19. COMBINING FORMATTING TAGS
+------------------------------------------------------------
+Example:
+    <p><strong><em><u>Bold, Italic, Underlined</u></em></strong></p>
+
+Notes:
+    - Close tags in reverse order of opening.
+    - Opening order doesn’t affect appearance.
+
+------------------------------------------------------------
+20. INLINE FONT TAG (LEGACY)
+------------------------------------------------------------
+Syntax:
+    <font face="Arial" size="5" color="blue">
+        Inline formatted text
+    </font>
+
+Attributes:
+    - face → font family
+    - size → 1–7 (larger = bigger)
+    - color → color name or hex
+
+Example:
+    <h4>
+        <font face="Arial" size="5" color="blue">
+            Inline formatted header
+        </font>
+    </h4>
+
+Notes:
+    - Deprecated in modern HTML.
+    - Use CSS instead.
+
+------------------------------------------------------------
+21. CLEAN CODE PRACTICES
+------------------------------------------------------------
+- Indent nested tags for readability.
+- Example:
+    <body>
+        <h1>Main Title</h1>
+        <p><strong>Bold Line</strong></p>
+        <p><em>Italic Line</em><br><u>Underlined Line</u></p>
+    </body>
+
+------------------------------------------------------------
+22. SUMMARY (Videos 1–10)
+------------------------------------------------------------
+- <!DOCTYPE html> → HTML5
+- <html>, <head>, <body> → structure
+- <title>, <meta>, <style>, <script> → head elements
+- <p> → paragraphs; <br> → line breaks
+- HTML ignores extra spaces → &nbsp; for manual spacing
+- <h1>–<h6> → headings
+- Text formatting:
+      <strong>, <em>, <u>, <strike>
+- Inline <font> tag = legacy
+- JavaScript adds interactivity
+- Clean indentation = good practice
+------------------------------------------------------------

@@ -1,0 +1,355 @@
+──────────────────────────────────────────────
+          HTML NOTES (VIDEOS 26–40)
+──────────────────────────────────────────────
+
+──────────────────────────────────────────────
+26–30: FORMS, GET vs POST, INPUT FIELDS
+──────────────────────────────────────────────
+
+GET vs POST Methods in Forms
+- Purpose: Transmit form data between client (browser) and server
+- HTTP facilitates communication between browser and server
+
+GET Method
+- Requests data from a specified resource
+- Name/value pairs from form fields sent in URL stream
+- Example:
+  <form action="send.php" method="get">
+      First Name: <input type="text" name="fname">
+      Last Name: <input type="text" name="lname">
+  </form>
+- Properties:
+  * Requests can be cached
+  * Remain in browser history
+  * Should only retrieve data
+  * Length restrictions
+  * Cannot be used for sensitive data
+  * Can be bookmarked
+
+POST Method
+- Submits data to be processed at a specified resource
+- Name/value pairs sent in HTTP message body
+- Example:
+  <form action="send.php" method="post">
+      First Name: <input type="text" name="fname">
+      Last Name: <input type="text" name="lname">
+  </form>
+- Properties:
+  * No data length restrictions
+  * Cannot be bookmarked
+  * Does not remain in browser history
+  * Requests are never cached
+
+Input Fields – Form Heading and Labels
+- Form heading: Employment Application
+- Row 2, column 1: First Name label
+- Row 3, column 1: Last Name label
+
+Text Input Field
+- Syntax:
+  <input type="text" name="fname" maxlength="50">
+- Attributes:
+  * name – used for PHP script processing
+  * maxlength – limits input characters
+- Notes:
+  * Keep lowercase, simple, no special characters
+  * Copy/paste for multiple fields (lname, etc.)
+
+Select Menus (Dropdowns)
+- Syntax:
+  <select name="position">
+      <option value="Ac">Accountant</option>
+      <option value="Re">Receptionist</option>
+      <option value="Ad">Administrator</option>
+      <option value="Su">Supervisor</option>
+  </select>
+- Experience Level Example:
+  <select name="experience">
+      <option value="Entry">Entry Level</option>
+      <option value="Very">Very Experienced</option>
+  </select>
+
+Checkboxes – Job Type
+- Syntax:
+  <input type="checkbox" name="ft"> Full Time
+  <input type="checkbox" name="pt"> Part Time
+  <input type="checkbox" name="ct"> Contract
+- Notes:
+  * Multiple selections allowed
+  * Text next to checkbox for clarity
+
+Radio Buttons – Employment Status
+- Syntax:
+  <input type="radio" name="estatus" value="Employed"> Employed
+  <input type="radio" name="estatus" value="Unemployed"> Unemployed
+  <input type="radio" name="estatus" value="Student"> Student
+- Notes:
+  * Only one selection allowed per group
+  * All radio buttons share same name attribute
+
+Text Area – Additional Comments
+- Syntax:
+  <textarea name="comments" cols="50" rows="5"></textarea>
+- Notes:
+  * Multi-line input
+  * Scrollbars automatically appear
+
+Submit and Reset Buttons
+- Syntax:
+  <input type="submit" name="submit" value="Submit">
+  <input type="reset" name="reset" value="Reset">
+- Notes:
+  * Submit sends form data to PHP script specified in form action
+  * Reset clears all input fields
+
+Key Points – Forms
+- GET: data in URL, bookmarkable, cached, length-limited
+- POST: data in body, no length restriction, not cached, cannot bookmark
+- Input fields: text, select, checkbox, radio, textarea
+- Field names important for backend processing
+
+──────────────────────────────────────────────
+31–35: IFRAMES, TABLE LAYOUTS, HEADER, CALLOUT BAR, IMAGES
+──────────────────────────────────────────────
+
+Iframes
+- Embed one HTML page inside another
+- Syntax:
+  <iframe src="https://www.ask.com" width="100%" height="400">
+      Your browser does not support iframes.
+  </iframe>
+  <iframe src="https://www.bing.com" width="100%" height="400">
+      Your browser does not support iframes.
+  </iframe>
+- Notes:
+  * Useful for displaying multiple search engines or external content
+  * Provide fallback text for unsupported browsers
+
+Building Page Layout with Tables (No CSS)
+- Tables used as layout containers
+- Limitations: inline styles only
+- Benefits: understand object placement, tabular data insertion, text formatting
+
+Header Section
+- Main table: width="100%", height="60px", border="0", cellspacing="5", cellpadding="5", bgcolor="#000000"
+- Nested table: width="547px", border="0", align="center", cellpadding="1", cellspacing="1"
+- Each link inside own <td>
+- Example:
+  <table width="100%" height="60" border="0" cellspacing="5" cellpadding="5" bgcolor="#000000">
+    <tr>
+      <td align="left">
+        <table width="547" border="0" align="center" cellpadding="1" cellspacing="1">
+          <tr>
+            <td width="96"><font face="Verdana, Geneva, sans-serif" color="#FFFFFF"><h3>Home</h3></font></td>
+            <td width="...">...</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+Callout Bar (Website Name + Phone)
+- Outer table: width="100%", height="150px", border="0", cellpadding="5", cellspacing="5", bgcolor="#D3D3D3"
+- Nested table: width="708px", border="0", cellpadding="1", cellspacing="1"
+- Two columns:
+  1. Left: <strong>My Business</strong><br>Website
+  2. Right: <strong>Call Us Today:</strong> 123-456-7890
+- Example:
+  <table width="100%" height="150" border="0" cellpadding="5" cellspacing="5" bgcolor="#D3D3D3">
+    <tr>
+      <td align="center">
+        <table width="708" border="0" cellpadding="1" cellspacing="1">
+          <tr>
+            <td width="338" align="left"><font><strong>My Business</strong><br>Website</font></td>
+            <td width="370" align="right"><font><strong>Call Us Today:</strong> 123-456-7890</font></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+Main Image Section
+- Nested table under callout bar
+- Syntax:
+  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td align="center">
+        <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td align="center">
+              <img src="mainimage.jpg" width="800" height="400" alt="Main Image">
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+- Notes:
+  * Image in same folder as HTML
+  * Center-aligned with <td align="center">
+
+Key Notes
+- Iframes embed external pages
+- Tables for layout: header, callout, main image
+- Nested tables for alignment
+- Inline styles (CSS later)
+- Practice object insertion, text formatting, forms, basic styling
+
+──────────────────────────────────────────────
+36–37: TEXT SECTION UNDER MAIN IMAGE
+──────────────────────────────────────────────
+
+Text Section Table
+- Place under main image
+- Syntax:
+  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td height="72" align="center" valign="top">
+        <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="26" align="center">
+              <font face="Verdana, Geneva, sans-serif" color="#000000">
+                Your text goes here
+              </font>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+- Notes:
+  * Height = 72px
+  * Horizontal alignment = center
+  * Vertical alignment = top
+  * Nested table controls width & font styling
+
+──────────────────────────────────────────────
+38: CONTACT US BUTTON + NEWSLETTER FORM
+──────────────────────────────────────────────
+
+Contact Button Table
+- Outer table:
+  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td height="72" align="center" valign="top">
+        <table width="313" border="0" cellspacing="3" cellpadding="3" bgcolor="#FFA500">
+          <tr>
+            <td width="301" align="center" nowrap>
+              <font face="Verdana, Geneva, sans-serif" color="#FFFFFF" size="5">
+                <a href="#">Contact Us Today</a>
+              </font>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+- Notes:
+  * Height = 72px
+  * Alignment center, vertical top
+  * Nested table orange background (#FFA500)
+  * Link placeholder: href="#"
+  * Font color white, size 5
+
+Newsletter Registration Form
+- Outer table row:
+  <tr>
+    <td height="72" align="center" valign="top">
+      <h3>Register for Our Newsletter</h3>
+      <form name="contact" method="post" action="send.php">
+        <input type="text" name="email">
+        <input type="submit" value="Submit">
+      </form>
+    </td>
+  </tr>
+- Notes:
+  * Form uses POST method
+  * Action = send.php
+  * Input name = "email"
+  * Submit button included
+
+──────────────────────────────────────────────
+39: THREE-COLUMN INFO TABLE
+──────────────────────────────────────────────
+
+Three-Column Table
+- Outer table:
+  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td>
+        <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <!-- Column Headings -->
+            <td width="268" align="center">
+              <font face="Verdana, Geneva, sans-serif"><strong>About Us</strong></font>
+            </td>
+            <td width="268" align="center">
+              <font face="Verdana, Geneva, sans-serif"><strong>Our Vision</strong></font>
+            </td>
+            <td width="290" align="center">
+              <font face="Verdana, Geneva, sans-serif"><strong>Services</strong></font>
+            </td>
+          </tr>
+          <tr>
+            <!-- Column Content -->
+            <td width="268" valign="top">
+              <font face="Verdana, Geneva, sans-serif">
+                Some descriptive text about the company.
+              </font>
+            </td>
+            <td width="268" valign="top">
+              <font face="Verdana, Geneva, sans-serif">
+                Our mission and vision statement.
+              </font>
+            </td>
+            <td width="290" valign="top">
+              <font face="Verdana, Geneva, sans-serif">
+                <ul>
+                  <li>Service 1</li>
+                  <li>Service 2</li>
+                  <li>Service 3</li>
+                </ul>
+              </font>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+- Notes:
+  * Two rows: headings + content
+  * Each column individually styled
+  * Third column uses unordered list
+
+──────────────────────────────────────────────
+40: FOOTER SECTION
+──────────────────────────────────────────────
+
+Footer Table
+- Syntax:
+  <table width="100%" border="0" cellspacing="0" cellpadding="5" bgcolor="#000000">
+    <tr>
+      <td align="center">
+        <font face="Verdana, Geneva, sans-serif" color="#FFFFFF">
+          Home | About | Services | Clients | Contact
+          <br>
+          &copy; 2025 My Business
+        </font>
+      </td>
+    </tr>
+  </table>
+- Notes:
+  * Background color black (#000000)
+  * Font color white
+  * Navigation labels + copyright
+  * Center-aligned content
+
+──────────────────────────────────────────────
+Key Notes – Videos 36–40
+──────────────────────────────────────────────
+- Tables structure: text sections, buttons, forms, three-column content, footer
+- Nested tables control width, alignment, spacing
+- Alignments: horizontal (left, center, right), vertical (top, middle, bottom)
+- Font tags for style (face, size, color) – replace with CSS later
+- Forms: POST method, action set to PHP script
+- Placeholder links: href="#" until actual links implemented

@@ -1,0 +1,53 @@
+Q1: What does "scripts": { "start": "nodemon app.js" } mean?
+A1: It tells npm/yarn to run "nodemon app.js" when you type "npm start".
+
+Q2: What is Vanilla JS?
+A2: Vanilla JS means plain JavaScript without libraries or frameworks.
+
+Q3: In Express, what is the flow of a request?
+A3: Client → HTTP Request → Express App (app.js) → Middleware/Routes → Controller/Handler → Response → Client.
+
+Q4: Why use ./routes/tasks vs ../routes/tasks vs /routes/tasks?
+A4:
+- ./ → current folder
+- ../ → one folder up
+- / → system root (not for project, avoid)
+
+Q5: What happens when I run "node app.js" or "nodemon app.js"?
+A5: It starts the Express server → listens on given port → console shows "server is running on port ...".
+
+----------------------------------------------------------------
+
+Express App Structure and Request Flow
+
+1. app.js (Entry Point / Server)
+   - Receives all client requests first.
+   - Starts the server with app.listen(port).
+   - Loads middleware (e.g., express.json()).
+   - Mounts routers using app.use().
+
+2. Router (routes/tasks.js)
+   - Acts as a traffic controller for requests.
+   - Defines endpoints like '/' or '/:id'.
+   - Maps each HTTP method to the corresponding controller function.
+   - Keeps app.js clean and organized.
+
+3. Controller (controller/tasks.js)
+   - Contains the actual business logic.
+   - Handles data processing, database calls, etc.
+   - Sends response back to the client.
+
+4. Request Flow
+   Client → app.js → Router → Controller → Response → Client
+
+5. Why use router instead of sending request directly to controller?
+   - Keeps app.js clean.
+   - Organizes routes per resource.
+   - Makes app scalable for multiple APIs.
+
+6. Example
+   - Client calls GET /api/v1/tasks/123
+   - app.js receives request
+   - app.use('/api/v1/tasks', tasks) forwards to routes/tasks.js
+   - routes/tasks.js matches /:id → calls getTask() in controller
+   - Controller executes logic → sends response back
