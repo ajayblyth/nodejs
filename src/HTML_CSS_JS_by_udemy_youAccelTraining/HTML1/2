@@ -1,0 +1,242 @@
+------------------------------------------------------------
+                 HTML NOTES (VIDEOS 11-20)
+------------------------------------------------------------
+
+------------------------------------------------------------
+1. UNORDERED LISTS (<ul>)
+------------------------------------------------------------
+- Unordered lists display items in *no particular order*.
+
+- Syntax:
+    <h3>My Grocery List</h3>
+    <ul>
+        <li>Apples</li>
+        <li>Bananas</li>
+        <li>Oranges</li>
+    </ul>
+
+- Explanation:
+  - <ul> = unordered list
+  - <li> = list item
+  - Items appear with bullets (-) by default.
+
+- Browser Output:
+  My Grocery List
+  - Apples
+  - Bananas
+  - Oranges
+
+------------------------------------------------------------
+2. ORDERED LISTS (<ol>)
+------------------------------------------------------------
+- Ordered lists display items in *specific, sequential order* (1, 2, 3...).
+
+- Syntax:
+    <h3>My Three Favorite Vacations</h3>
+    <ol>
+        <li>Goa</li>
+        <li>Shimla</li>
+        <li>Manali</li>
+    </ol>
+
+- Explanation:
+  - <ol> = ordered list
+  - List items auto-numbered
+  - Browser starts numbering from 1
+
+- Browser Output:
+  My Three Favorite Vacations
+  1. Goa
+  2. Shimla
+  3. Manali
+
+------------------------------------------------------------
+3. INSERTING IMAGES (<img>)
+------------------------------------------------------------
+- <img> tag inserts images in HTML.
+
+- Important attributes:
+  - src   -> image source/location
+  - width -> width (px or %)
+  - height-> height
+  - alt   -> alternative text (optional but recommended)
+
+- Syntax (Relative File Reference):
+    <h3>My Favorite Animals</h3>
+    <p>Here are some animal images:</p>
+    <img src="cat.jpg" width="200" height="150">
+    <img src="dog.jpg" width="200" height="150">
+    <img src="lion.jpg" width="200" height="150">
+
+- Syntax (Absolute File Reference):
+    <img src="https://upload.wikimedia.org/image.jpg"
+         width="200" height="150">
+
+- Notes:
+  - Place images in same folder as HTML file (relative path)
+  - <img> is self-closing
+  - Relative path = local file
+  - Absolute path = full URL
+
+------------------------------------------------------------
+4. EMBEDDING VIDEOS (<video>)
+------------------------------------------------------------
+- <video> element embeds videos.
+
+- Syntax:
+    <video width="600" controls>
+        <source src="myvideo.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+- Attributes:
+  - width / height -> size
+  - controls -> play/pause/volume/fullscreen
+  - autoplay -> starts automatically
+  - loop -> restarts automatically
+  - muted -> no sound
+
+- Example with autoplay:
+    <video width="600" autoplay>
+        <source src="intro.mp4" type="video/mp4">
+        Your browser does not support HTML5 video.
+    </video>
+
+------------------------------------------------------------
+5. ABSOLUTE VS RELATIVE FILE REFERENCING
+------------------------------------------------------------
+- "src" attribute in <img> or <video> points to file location.
+
+> RELATIVE PATH
+- File in same folder as HTML file
+- Example:
+    <img src="photo.jpg">
+    <video src="clip.mp4">
+
+- File structure:
+    |-- index.html
+    |-- photo.jpg
+    |-- clip.mp4
+
+> ABSOLUTE PATH
+- Files on external websites/servers
+- Example:
+    <img src="https://example.com/images/dog.jpg">
+
+- Must include full URL (protocol + domain + path + filename)
+- Example:
+    <img src="https://planwallpaper.com/img/nature.jpg"
+         width="400" height="250">
+
+------------------------------------------------------------
+6. ADDING LINKS IN HTML
+------------------------------------------------------------
+- Link types:
+  - Text links
+  - Image links
+
+- Linking Images:
+<a href="https://www.miami.com">
+    <img src="vacation1.jpg" width="300" height="200" />
+</a>
+
+- Linking Text:
+<p>
+    Check out <a href="https://www.miami.com">Miami</a> for vacation tips.
+</p>
+
+- Default behavior: link opens in same window
+- Open in new window:
+<a href="https://www.miami.com" target="_blank">Miami</a>
+
+------------------------------------------------------------
+7. ANCHORS - LINKING TO SECTIONS ON SAME PAGE
+------------------------------------------------------------
+- Purpose: navigate to a specific section on the same page
+
+Step 1: Add named anchors
+<a id="article1"></a>
+<h2>Article 1</h2>
+
+Step 2: Link from Table of Contents
+<ul>
+    <li><a href="#article1" target="_self">Article 1</a></li>
+    <li><a href="#article2" target="_self">Article 2</a></li>
+</ul>
+
+------------------------------------------------------------
+8. CREATING TABLES IN HTML
+------------------------------------------------------------
+- Purpose: organize data into rows and columns
+
+- Table structure:
+  - Rows -> <tr>
+  - Columns -> <td>
+
+Example:
+<table width="100%" border="1" bordercolor="blue" cellspacing="2" cellpadding="5">
+    <tr>
+        <td>Sport</td>
+        <td>Responses</td>
+    </tr>
+    <tr>
+        <td>Football</td>
+        <td>10</td>
+    </tr>
+    <tr>
+        <td>Basketball</td>
+        <td>8</td>
+    </tr>
+</table>
+
+------------------------------------------------------------
+9. NESTED TABLES
+------------------------------------------------------------
+- Table inside another table
+
+Example:
+<table width="100%" border="1" bordercolor="red">
+    <tr>
+        <td>
+            <table width="500" border="1" bordercolor="blue">
+                ...
+            </table>
+        </td>
+    </tr>
+</table>
+
+------------------------------------------------------------
+10. MERGING COLUMNS (COLSPAN)
+------------------------------------------------------------
+- Purpose: combine multiple columns into one
+
+Example:
+<tr>
+    <td colspan="2">My Expenses</td>
+</tr>
+
+------------------------------------------------------------
+11. KEY POINTS
+------------------------------------------------------------
+Links:
+- href -> destination URL
+- target="_blank" -> open new window
+- Anchors: id in <a> + href="#id" for same-page navigation
+
+Tables:
+- <table>, <tr>, <td> -> structure
+- Attributes: width, border, bordercolor, cellspacing, cellpadding
+- Use colspan to merge columns
+
+------------------------------------------------------------
+SUMMARY (VIDEOS 11-20)
+------------------------------------------------------------
+- <ul> -> unordered list (bullets)
+- <ol> -> ordered list (numbers)
+- <li> -> list item
+- <img> -> inserts images (src, width, height)
+- <video> -> embeds videos (controls, autoplay)
+- <a> -> links text/images
+- Anchors -> same-page navigation
+- Tables -> <table>, <tr>, <td>
+- Nested tables -> table within table
